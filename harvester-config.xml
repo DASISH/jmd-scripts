@@ -1,0 +1,108 @@
+<config>
+
+  <!--
+      This is the configuration for harvesting all community providers
+      for the DASISH Joint Metadata Domain (T5.4). This configuration
+      file is used by OAI Harvest Manager; see
+      https://github.com/TheLanguageArchive/oai-harvest-manager for
+      details.
+  -->
+
+  <!-- ### configuration settings ### -->
+  <settings>
+    <!-- Working directory. -->
+    <workdir>/home/work/work/01-harvested</workdir>
+
+    <!-- Maximum number of attempts per record before giving up. -->
+    <max-retry-count>2</max-retry-count>
+
+    <!-- Delay between retries of a record (milliseconds). -->
+    <retry-delay>10000</retry-delay>
+
+    <!-- Maximum number of concurrent harvester threads -->
+    <max-jobs>8</max-jobs>
+
+    <!-- Number of resources placed in the resource pool. -->
+    <resource-pool-size>4</resource-pool-size>
+
+    <!-- Default timeout (for connection and reading) for a single
+    http request in seconds. If unspecified, will be INFINITE.  -->
+    <timeout>60</timeout>
+  </settings>
+
+
+  <!-- ### output directories (referenced in the action section) ### -->
+  <directories>
+    <!-- When the attribute 'max-files' is non-zero, subdirectories
+         will be created to ensure no directory has more than that
+         number of files. -->
+    <dir path="oai-pmh" id="orig" max-files="1000"/>
+    <dir path="results/cmdi" id="cmdi" max-files="1000"/>
+    <dir path="results/dc" id="dc" max-files="1000"/>
+    <dir path="results/ddi" id="ddi" max-files="1000"/>
+  </directories>
+
+
+  <!-- ### actions to take on metadata formats (in order of preference) ### -->
+  <actions>
+    <format match="namespace" value="http://www.clarin.eu/cmd/">
+      <action type="strip"/>
+      <action type="save" dir="cmdi"/>
+    </format>
+    <format match="prefix" value="oai_ddi">
+      <action type="strip"/>
+      <action type="save" dir="ddi"/>
+    </format>
+    <format match="prefix" value="ddi">
+      <action type="strip"/>
+      <action type="save" dir="ddi"/>
+    </format>
+    <format match="prefix" value="ddi_3_1">
+      <action type="strip"/>
+      <action type="save" dir="ddi"/>
+    </format>
+    <format match="prefix" value="oai_dc">
+      <action type="strip"/>
+      <action type="save" dir="dc"/>
+    </format>
+  </actions>
+
+
+  <!-- ### list of providers ### -->
+  <providers>
+    <provider url="http://ddaonline.dda.dk/oai-pmh/"/>
+    <provider url="http://nesstar.snd.gu.se/oai-pmh/"/>
+    <provider url="http://nesstar.ucd.ie/oai-pmh/"/>
+    <provider url="http://www.lidata.eu/oaiprovider"/>
+    <provider url="http://oai.ukdataservice.ac.uk/oai/provider"/>
+    <provider url="http://spraakbanken.gu.se/resources/oai-pmh"/>
+    <provider url="http://oai.datacite.org/oai" name="GESIS via DataCite">
+      <set>GESIS.ARCHIV</set>
+    </provider>
+    <provider url="http://oai.datacite.org/oai" name="SND via DataCite">
+      <set>SND.SND</set>
+    </provider>
+
+    <provider url="http://easy.dans.knaw.nl/oai/"/>
+
+    <provider url="http://gams.uni-graz.at/oaiprovider/"/>
+    <provider url="http://demo2.dariah.eu/colreg/OAIHandler"/>
+    <provider url="http://acdh.oeaw.ac.at/acdh-repo/oai"/>
+    <provider url="http://fedora.phaidra.univie.ac.at/oaiprovider/"/>
+    <provider url="http://arachne.uni-koeln.de/OAI-PMH/oai-pmh.xml"/>
+    <provider url="http://demo.imeji.org/fledgeddata/oai/"/>
+    <provider url="http://pubman.mpdl.mpg.de/escidoc-oaiprovider/"/>
+    <provider url="http://zuse.zib.de/fledgeddata/oai/"/>
+    <provider url="http://edoc.bbaw.de/oai2/oai2.php"/>
+    <provider url="http://archaeologydataservice.ac.uk/oai/archives/OAIHandler"/>
+    <provider url="http://archaeologydataservice.ac.uk/oai/journals/OAIHandler"/>
+    <provider url="http://staroai.theses.fr/OAIHandler"/>
+    <provider url="http://www.calames.abes.fr/oai/oai2.aspx"/>
+    <provider url="http://oai.openedition.org"/>
+    <provider url="http://sldr.org/oai-pmh.php"/>
+    <provider url="http://www.etnoinfolab.org/oai/oai.php"/>
+    <provider url="http://www.arzenal.si/oai/arzenal"/>
+    <provider url="http://isn3.zrc-sazu.si/etnofolk/OAI-2.0/oai.php"/>
+    <provider url="http://www.sistory.si/oai.php"/>
+  </providers>
+</config>
