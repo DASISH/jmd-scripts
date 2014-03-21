@@ -49,7 +49,7 @@
   <actions>
     <format match="namespace" value="http://www.clarin.eu/cmd/">
       <action type="strip"/>
-      <action type="save" dir="cmdi"/>
+      <action type="save" dir="cmdi" suffix=".xml"/>
     </format>
     <!--
 	The different DDI versions are most reliably matched by schema
@@ -58,19 +58,19 @@
     -->
     <format match="schema" value="http://www.icpsr.umich.edu/DDI/Version1-2-2.xsd">
       <action type="strip"/>
-      <action type="save" dir="ddi122"/>
+      <action type="save" dir="ddi122" suffix=".xml"/>
     </format>
     <format match="schema" value="http://www.ddialliance.org/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd">
       <action type="strip"/>
-      <action type="save" dir="ddi25"/>
+      <action type="save" dir="ddi25" suffix=".xml"/>
     </format>
     <format match="schema" value="http://www.ddialliance.org/Specification/DDI-Lifecycle/3.1/XMLSchema/instance.xsd">
       <action type="strip"/>
-      <action type="save" dir="ddi31"/>
+      <action type="save" dir="ddi31" suffix=".xml"/>
     </format>
     <format match="prefix" value="oai_dc">
       <action type="strip"/>
-      <action type="save" dir="dc"/>
+      <action type="save" dir="dc" suffix=".xml"/>
     </format>
   </actions>
 
