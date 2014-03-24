@@ -7,7 +7,9 @@ that eventually the documentation here would be sufficient to
 replicate the implementation completely. (We're not quite there
 yet...)
 
-The JMD's workflow comprises three stages:
+The JMD's workflow comprises three stages, as illustrated below:
+
+![workflow illustration](https://github.com/DASISH/jmd-scripts/blob/master/workflow.png "JMD Workflow")
 
 1. Fetching of original metadata records with **OAI-PMH harvesting**.
 2. Performing **semantic mappings** into the JMD's internal
