@@ -20,6 +20,10 @@ portal**.
 Between stages, the metadata is stored on the file system to minimise
 interdependency between the stages.
 
+The main tasks are triggered by simple workflow scripts, found in this
+repository, but the main body of work of the JMD is done in modules
+that are stored in their own repositories
+
 
 ## Harvesting
 
@@ -29,13 +33,15 @@ Manager](https://github.com/TheLanguageArchive/oai-harvest-manager)
 for it. See the [configuration file](harvester-config.xml) for
 details. One thing of note is that formats to be harvested are mostly
 defined based on the metadata schema (in which case, the harvester
-performs a ````ListMetadataFormats```` query and harvests using all
-metadata prefixes that fit the specified schema).
+performs a `ListMetadataFormats` query and harvests using all metadata
+prefixes that fit the specified schema).
+
 
 ## Mapping
 
 The mappings are stored and documented in a [separate
 repository](https://github.com/DASISH/md-mapping).
+
 
 ## Web portal
 

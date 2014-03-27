@@ -39,9 +39,9 @@
          number of files. -->
     <dir path="results/cmdi" id="cmdi" max-files="1000"/>
     <dir path="results/dc" id="dc" max-files="1000"/>
-    <dir path="results/ddi/1.2.2" id="ddi122" max-files="1000"/>
-    <dir path="results/ddi/2.5" id="ddi25" max-files="1000"/>
-    <dir path="results/ddi/3.1" id="ddi31" max-files="1000"/>
+    <dir path="results/ddi-1.2.2" id="ddi122" max-files="1000"/>
+    <dir path="results/ddi-2.5" id="ddi25" max-files="1000"/>
+    <dir path="results/ddi-3.1" id="ddi31" max-files="1000"/>
   </directories>
 
 
