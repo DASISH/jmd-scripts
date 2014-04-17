@@ -7,6 +7,8 @@
       file is used by OAI Harvest Manager; see
       https://github.com/TheLanguageArchive/oai-harvest-manager for
       details.
+
+      This file covers endpoints belonging to CESSDA members.
   -->
 
   <!-- ### configuration settings ### -->
@@ -37,11 +39,11 @@
     <!-- When the attribute 'max-files' is non-zero, subdirectories
          will be created to ensure no directory has more than that
          number of files. -->
-    <dir path="results/cmdi" id="cmdi" max-files="1000"/>
-    <dir path="results/dc" id="dc" max-files="1000"/>
-    <dir path="results/ddi-1.2.2" id="ddi122" max-files="1000"/>
-    <dir path="results/ddi-2.5" id="ddi25" max-files="1000"/>
-    <dir path="results/ddi-3.1" id="ddi31" max-files="1000"/>
+    <dir path="cessda/results/cmdi" id="cmdi" max-files="1000"/>
+    <dir path="cessda/results/dc" id="dc" max-files="1000"/>
+    <dir path="cessda/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
+    <dir path="cessda/results/ddi-2.5" id="ddi25" max-files="1000"/>
+    <dir path="cessda/results/ddi-3.1" id="ddi31" max-files="1000"/>
   </directories>
 
 
@@ -91,25 +93,5 @@
     </provider>
 
     <provider url="http://easy.dans.knaw.nl/oai/"/>
-
-    <provider url="http://gams.uni-graz.at/oaiprovider/"/>
-    <provider url="http://demo2.dariah.eu/colreg/OAIHandler"/>
-    <provider url="http://acdh.oeaw.ac.at/acdh-repo/oai"/>
-    <provider url="http://fedora.phaidra.univie.ac.at/oaiprovider/"/>
-    <provider url="http://arachne.uni-koeln.de/OAI-PMH/oai-pmh.xml"/>
-    <provider url="http://demo.imeji.org/fledgeddata/oai/"/>
-    <provider url="http://pubman.mpdl.mpg.de/escidoc-oaiprovider/"/>
-    <provider url="http://zuse.zib.de/fledgeddata/oai/"/>
-    <provider url="http://edoc.bbaw.de/oai2/oai2.php"/>
-    <provider url="http://archaeologydataservice.ac.uk/oai/archives/OAIHandler"/>
-    <provider url="http://archaeologydataservice.ac.uk/oai/journals/OAIHandler"/>
-    <provider url="http://staroai.theses.fr/OAIHandler"/>
-    <provider url="http://www.calames.abes.fr/oai/oai2.aspx"/>
-    <provider url="http://oai.openedition.org"/>
-    <provider url="http://sldr.org/oai-pmh.php"/>
-    <provider url="http://www.etnoinfolab.org/oai/oai.php"/>
-    <provider url="http://www.arzenal.si/oai/arzenal"/>
-    <provider url="http://isn3.zrc-sazu.si/etnofolk/OAI-2.0/oai.php"/>
-    <provider url="http://www.sistory.si/oai.php"/>
   </providers>
 </config>
