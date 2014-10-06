@@ -19,7 +19,7 @@ import io
 import codecs
 import pycountry 
 
-# initialize dictionaries for country and language mapping using values from pycountry package
+# initialize dictionaries for country and language mapping based on pycountry
 MAP_DICTIONARIES = {}
 
 LANGUAGES = {}
@@ -118,6 +118,23 @@ def replace(dataset,facetName,old_value,new_value):
                 
     return dataset
 
+def replace_token(dataset,facetName,old_value,new_value):
+    """
+    replaces old value with new value for a given facet
+    """
+    for facet in dataset:
+        if str_equals(facet,facetName) and old_value in dataset[facet]:
+            dataset[facet] = dataset[facet].replace(old_value,new_value)
+            return dataset
+        if facet == 'extras':
+            for extra in dataset[facet]:
+                if extra['key'] == facetName and old_value in extra['value']:
+                    extra['value'] = extra['value'].replace(old_value,new_value)
+                    return dataset
+                else:
+                    pass
+                
+    return dataset
     
 def truncate(dataset,facetName,old_value,size):
     """
@@ -187,6 +204,9 @@ def postprocess(dataset,rules):
         if str_equals(action,"replace"):
             # old_value refers to old text, which we want to replace by new text 
             dataset = replace(dataset,facetName,old_value,new_value)
+        elif str_equals(action,"replace_token"):
+            # old_value refers to old text, which we want to replace by new text 
+            dataset = replace_token(dataset,facetName,old_value,new_value)
         elif str_equals(action,"truncate"):
             # old_value refers to text given or any (represented by '*')
             # new_value refers to the number of characters to truncate the text to
