@@ -17,8 +17,31 @@ import re
 import simplejson as json
 import io
 import codecs
+import pycountry 
 
+# initialize dictionaries for country and language mapping using values from pycountry package
+MAP_DICTIONARIES = {}
 
+LANGUAGES = {}
+for ln in list(pycountry.languages):
+    try:
+        LANGUAGES[ln.alpha2] = ln.name
+        LANGUAGES[ln.terminology] = ln.name
+    except:
+        pass
+  
+COUNTRIES = {}
+for ct in list(pycountry.countries):
+    try:
+        COUNTRIES[ct.alpha2.lower()] = ct.name  
+        COUNTRIES[ct.alpha3.lower()] = ct.name 
+    except:
+        pass 
+
+MAP_DICTIONARIES["Language"] = LANGUAGES
+MAP_DICTIONARIES["Country"] = COUNTRIES
+
+            
 def get_dataset(srcFile):
     """
     reads file from disk and returns json text
@@ -32,8 +55,8 @@ def get_conf(configFile):
     reads config file 
     """
     f = codecs.open(configFile, "r", "utf-8")
-    rules = f.readlines()[1:] # without the header
-    rules = filter(lambda x:len(x) != 0,rules) # removes empty lines
+    rules = f.readlines()
+    rules = filter(lambda x:len(x.strip()) != 0,rules) # removes empty lines
     return rules
     
 def save_data(dataset,dstFile):
@@ -82,8 +105,20 @@ def replace(dataset,facetName,old_value,new_value):
                 if extra['key'] == facetName and extra['value'] == old_value:
                     extra['value'] = new_value
                     return dataset
+                elif extra['key'] == facetName and old_value == "*":
+                    key = extra['value']
+                    try:
+                        new_value = MAP_DICTIONARIES[facetName][key]
+                        extra['value'] = new_value
+                    except:
+                        pass
+                    return dataset
+                else:
+                    pass
+                
     return dataset
- 
+
+    
 def truncate(dataset,facetName,old_value,size):
     """
     truncates old value with new value for a given facet
@@ -127,9 +162,11 @@ def changeDateFormat(dataset,facetName,old_format,new_format):
 def postprocess(dataset,rules):
     """
     changes dataset field values according to configuration
-    """          
+    """   
     for rule in rules:
         # rules can be checked for correctness
+        if rule.startswith('#'): continue
+  
         assert(rule.count(',,') == 5),"a double comma should be used to separate items"
         
         rule = rule.split(',,') # splits the each line of config file 
@@ -141,12 +178,10 @@ def postprocess(dataset,rules):
         action = rule[5]
                     
         r = dataset.get("group",None)
-        if groupName != '*' and  groupName != r:
-            return dataset
+        if groupName != '*' and  groupName != r: continue
 
         r = dataset.get("name",None)
-        if datasetName != '*' and datasetName != r:
-            return dataset
+        if datasetName != '*' and datasetName != r: continue
         
         #print action
         if str_equals(action,"replace"):
