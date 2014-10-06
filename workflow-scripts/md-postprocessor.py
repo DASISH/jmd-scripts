@@ -180,7 +180,7 @@ def postprocess(dataset,rules):
         r = dataset.get("group",None)
         if groupName != '*' and  groupName != r: continue
 
-        r = dataset.get("name",None)
+        r = dataset.get("DataProvider",None)
         if datasetName != '*' and datasetName != r: continue
         
         #print action
