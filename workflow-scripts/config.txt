@@ -4,3 +4,19 @@
 *,,*,,Language,,fr,,French,,replace
 *,,*,,Language,,fre,,French,,replace
 *,,*,,PublicationTimestamp,,*,,UTC,,changeDateFormat
+*,,*,,Subject,,[Paris],,Paris,,replace
+*,,*,,Subject,,AARDEWERK,,Pottery,,replace
+*,,*,,Subject,,Archeologisch: booronderzoek,,Archaeological: drilling research,,replace
+*,,*,,Subject,,Archeologisch: bureauonderzoek,,Archaeological: desk research,,replace
+*,,*,,Subject,,HISTORIA,,History,,replace
+*,,*,,Subject,,Historia,,History,,replace
+*,,*,,Subject,,IJZERTIJD,,Iron Age,,replace
+*,,*,,Subject,,LATE MIDDELEEUWEN,,Late Midle Ages,,replace
+*,,*,,Subject,,MIDDELEEUWEN,,Midle Ages,,replace
+*,,*,,Subject,,Modélisation,,Modeling,,replace
+*,,*,,Subject,,NIEUWE TIJD,,Modern Time,,replace
+*,,*,,Subject,,PROSPECTIE,,Prospecting,,replace
+*,,*,,Subject,,ROMEINSE TIJD,,Roman Time,,replace
+*,,*,,Subject,,Sammlung, Münzsammlung, Numismatik,,Collection, coin collection, numismatic,,replace
+*,,*,,Subject,,value=Nederzetting, onbepaald,,Settlement, indefinite,,replace
+*,,*,,Subject,,value=Onbekend,,Unknown,,replace
