@@ -7,7 +7,6 @@ $ python md-harmonizer.py -i /path/to/input.json -o /path/to/output.json -c /pat
 Input: json file (the input comes from the output of the mapper)
 Configuration file (this is a text file, where actions or rules are specified, In the scripts folder, you can see the format of the config.tx)
 Output:json file (the output of the postprocessor is another json file ready to be validated and/or uploaded to CKAN) 
-
 """
 
 import numpy as np
