@@ -15,10 +15,26 @@ import simplejson as json
 import itertools
 import argparse
 import os
-import pickle
+import cPickle as pickle
 import copy
 from time import time
+
+import sys
+sys.path.append('/home/binyam/dasish_prototype/ckanapi')
 import ckanapi
+
+
+def add_DataProvider(dataset):
+	"""
+	adds data provider facet
+	"""
+	value = ""
+	for extra in dataset['extras']:
+		if extra['key'] == 'MetadataSource':
+			value = extra['value'].split('/')[8] # splits path by / and takes the 8th entry as the provider name
+			value = value.replace('_',' ')
+			break
+	dataset['extras'].append({"key":"DataProvider","value":value})
 
 def trim_MetadataSource(dataset):
     """
@@ -52,10 +68,25 @@ def get_checksum_table(checksum_pkl):
     else:
         return {}
      
+def split_structure(path):
+    """
+    splits a path to its parts (e.g. '/home/xxx/yy' to ['/','home','xxx','yy'])
+    """
+    allparts = []
+    while 1:
+        parts = os.path.split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        elif parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        else:
+            path = parts[0]
+            allparts.insert(0, parts[1])
+    return allparts
  
 def main():
-    dst_url = 'http://tlatest02.mpi.nl/ckan/'
-    dst_apikey = '54870070-140f-4682-b914-63e82082233e'
     parser = argparse.ArgumentParser()
     parser.add_argument('-u','--url')
     parser.add_argument('-a','--apikey')
@@ -66,6 +97,9 @@ def main():
     args = parser.parse_args()
     checksum_pkl = args.checksum
     
+    dst_url = args.url
+    dst_apikey = args.apikey
+
     # loads a file containing filenames and their checksums
     if not checksum_pkl:
         print 'Error: checksum dictionary name missing'
@@ -74,58 +108,54 @@ def main():
     checksum_table = get_checksum_table(checksum_pkl)
     
     if not args.src:
-        print 'Error: source directory not given'
+        print 'Error: source file missing'
         exit(1)
-        
-    src_dir = args.src
-    if src_dir.endswith('/'):
-        src_dir = src_dir[:-1]
+    if not args.url:
+       print 'Error: missing url'
+       exit(1)
+    if not args.apikey:
+       print 'Error: missing apikey'
+       exit(1)
 
-    groupNames=dict(map(lambda x:x.strip().split(),open('/home/work/work/group.txt').readlines()))
-    _,group_name = os.path.split(os.path.split(src_dir)[0]) # extracts name of parent directory
-    group_name = groupNames[group_name].lower()
-
-    if group_name == 'cessda':
-        exit(1)
+    abs_path = args.src
+    
+    group_name = split_structure(abs_path)[5].lower() #  extracts group name
 	
-    file_names = os.listdir(src_dir) # gets files in src, src is assumed to be a directory      
-    f = open('april_upload_times.txt','a')
-    f.write('#new session\n')
+    f = open('august_upload_times.txt','a')
+   # f.write('#new session\n')
     ckan = ckanapi.RemoteCKAN(dst_url, dst_apikey)
-    for i,fname in enumerate(file_names):
-        if fname.endswith('.json'):
-            path = os.path.join(args.src,fname)
-            text = open(path).read()
-            dataset = json.loads(text)
-            dataset['groups'] = [{'name': group_name}]
-            trim_MetadataSource(dataset)  # remove /home/work part to get /work/01-harvested/xxxx/and/so/on 
-            checksum = get_checksum(dataset)
-            if checksum_table.get(fname) != checksum: # if dataset is new or updated
-                try:
-                    t0 = time()
-                    dataset['name'] = checksum
-                    ckan.action.package_create(**dataset)
-                    t = time() - t0 
-                    f.write(str(t) + '\n')
-                    checksum_table[fname] = checksum
-                    print 'upload number =', i
-                    print 'upload time =',t
-                    print 'checksum of dataset =',checksum
-                    print 'dataset =',dataset
-                    #print text
-                    print
-                except ckanapi.ValidationError as e:
-                    ckan.action.package_update(**dataset)
-                    print i
-                    print 'Error...'
-                    print e
-                    print dataset
-                    print 
-                except:
-                    print i
-                    print 'Error: skipping..'
-                    print dataset 
-                    #pickle.dump(checksum_table, open(checksum_pkl, "wb" ))
+    
+    if abs_path.endswith('.json'):
+        text = open(abs_path).read()
+        dataset = json.loads(text)
+        dataset['groups'] = [{'name': group_name}]
+        add_DataProvider(dataset) # adds the data provider facet and its value
+        trim_MetadataSource(dataset)  # remove /home/work part to get /work/01-harvested/xxxx/and/so/on 
+        checksum = get_checksum(dataset)
+        _,fileName = os.path.split(abs_path)
+        if checksum_table.get(fileName) != checksum: # if dataset is new or updated
+            try:
+                t0 = time()
+                dataset['name'] = checksum
+                ckan.action.package_create(**dataset)
+                t = time() - t0 
+                f.write(str(t) + '\n')
+                checksum_table[fileName] = checksum
+                print 'upload time =',t
+                print 'checksum of dataset =',checksum
+                print 'dataset =',dataset
+                #print text
+                print
+            except ckanapi.ValidationError as e:
+                ckan.action.package_update(**dataset)
+                print 'Error...'
+                print e
+                print dataset
+                print 
+            except:
+                print 'Error: skipping..'
+                print dataset 
+                #pickle.dump(checksum_table, open(checksum_pkl, "wb" ))
                     
     pickle.dump(checksum_table, open(checksum_pkl, "wb" ))
      
