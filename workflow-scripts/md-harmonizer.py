@@ -17,6 +17,9 @@ import simplejson as json
 import io
 import codecs
 import pycountry 
+# pycountry provides the ISO databases for the standards:
+# 639 for languages
+# 3166 for countries
 
 # initialize dictionaries for country and language mapping based on pycountry
 MAP_DICTIONARIES = {}
