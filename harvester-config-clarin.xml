@@ -1,0 +1,62 @@
+<!-- This is the configuration for CLARIN harvesting. -->
+<config>
+
+  <!-- ### configuration settings ### -->
+  <settings>
+    <!-- Working directory. -->
+    <workdir>/home/work/work/01-harvested</workdir>
+
+    <!-- Maximum number of attempts per record before giving up. -->
+    <max-retry-count>2</max-retry-count>
+
+    <!-- Delay between retries of a record (milliseconds). -->
+    <retry-delay>10000</retry-delay>
+
+    <!-- Maximum number of concurrent harvester threads -->
+    <max-jobs>8</max-jobs>
+
+    <!-- Number of resources placed in the resource pool. -->
+    <resource-pool-size>4</resource-pool-size>
+
+    <!-- Default timeout (for connection and reading) for a single
+    http request in seconds. If unspecified, will be INFINITE.  -->
+    <timeout>60</timeout>
+  </settings>
+
+
+  <!-- ### output directories (referenced in the action section) ### -->
+  <directories>
+    <!-- When the attribute 'max-files' is non-zero, subdirectories
+         will be created to ensure no directory has more than that
+         number of files. -->
+    <!-- <dir path="oai-pmh" id="orig" max-files="0"/> -->
+    <dir path="clarin/results/cmdi" id="cmdi" max-files="1000"/>
+    <!-- <dir path="clarin/results/olac" id="olac" max-files="1000"/> -->
+    <!-- <dir path="clarin/results/dc" id="dc" max-files="1000"/> -->
+  </directories>
+
+  <!-- ### actions to take on metadata formats (in order of preference) ### -->
+  <actions>
+    <format match="namespace" value="http://www.clarin.eu/cmd/">
+      <action type="save" dir="orig" suffix=".xml"/>
+      <action type="strip"/>
+      <action type="save" dir="cmdi" suffix=".xml"/>
+    </format> 
+  </actions>
+
+  <!-- ### list of providers ### -->
+  <providers>     
+   <!-- MPI --> 
+  <provider url="http://corpus1.mpi.nl/ds/oaiprovider/oai2"/> 
+   
+   <!-- DK -->
+   <!-- <provider url="http://clarin.dk/oaiprovider"/> -->  
+   
+   <!-- DANS works --> 
+   <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/> 
+
+   <!-- OEW works -->
+   <provider url="http://clarin.oeaw.ac.at/oaiprovider"/>  
+
+  </providers>
+</config>
