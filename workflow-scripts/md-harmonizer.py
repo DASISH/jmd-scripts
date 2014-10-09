@@ -17,14 +17,8 @@ import simplejson as json
 import io
 import codecs
 import pycountry 
-<<<<<<< HEAD
 import csv
 from urllib2 import urlopen
-=======
-# pycountry provides the ISO databases for the standards:
-# 639 for languages
-# 3166 for countries
->>>>>>> 4fdb5cef7134f1d7b56ad1e8b189c393066c5a54
 
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
@@ -41,7 +35,6 @@ for ln in list(pycountry.languages):
         
   
 COUNTRIES = {}
-
 for ct in list(pycountry.countries):
     try:
         COUNTRIES[ct.alpha2.lower()] = ct.name  
