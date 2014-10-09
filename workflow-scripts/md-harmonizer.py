@@ -7,7 +7,6 @@ $ python md-harmonizer.py -i /path/to/input.json -o /path/to/output.json -c /pat
 Input: json file (the input comes from the output of the mapper)
 Configuration file (this is a text file, where actions or rules are specified, In the scripts folder, you can see the format of the config.tx)
 Output:json file (the output of the postprocessor is another json file ready to be validated and/or uploaded to CKAN) 
-
 """
 
 import numpy as np
@@ -18,30 +17,39 @@ import simplejson as json
 import io
 import codecs
 import pycountry 
+import csv
+from urllib2 import urlopen
 
-# initialize dictionaries for country and language mapping based on pycountry
-MAP_DICTIONARIES = {}
+u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
+rows = list(csv.reader(u, delimiter='\t'))[1:]
 
 LANGUAGES = {}
+for row in rows:
+    LANGUAGES[row[0]] = row[-2] # key: the first field, value: the second from last field
 for ln in list(pycountry.languages):
     try:
         LANGUAGES[ln.alpha2] = ln.name
-        LANGUAGES[ln.terminology] = ln.name
+        #LANGUAGES[ln.terminology] = ln.name
     except:
         pass
+        
   
 COUNTRIES = {}
+
 for ct in list(pycountry.countries):
     try:
         COUNTRIES[ct.alpha2.lower()] = ct.name  
         COUNTRIES[ct.alpha3.lower()] = ct.name 
     except:
-        pass 
+        pass
+    
+
+MAP_DICTIONARIES = {}
 
 MAP_DICTIONARIES["Language"] = LANGUAGES
 MAP_DICTIONARIES["Country"] = COUNTRIES
 
-            
+   
 def get_dataset(srcFile):
     """
     reads file from disk and returns json text
@@ -223,30 +231,46 @@ def postprocess(dataset,rules):
     return dataset
     
 def main():
-	parser = argparse.ArgumentParser(description='Postprocesses a json file')
-	parser.add_argument('-i','--srcFile',help='path to an input json file to be postprocessed')
-	parser.add_argument('-c','--configFile',help='path to a configuration text file')
-	parser.add_argument('-o','--dstFile', help='path to output json file')
-	
-	# parse command line arguments
-	args = parser.parse_args()
-	srcFile = args.srcFile
-	configFile = args.configFile
-	dstFile = args.dstFile
-	
-	if not (srcFile and configFile and dstFile):
-	    print parser.print_help()
-	    exit(1)
-	
-	# read input and config files
- 	dataset = get_dataset(srcFile)
- 	conf_data = get_conf(configFile)
- 	
- 	# postprocess the json file
- 	new_dataset = postprocess(dataset,conf_data)
- 	
- 	# save output json to file
-	save_data(new_dataset,dstFile)
+    parser = argparse.ArgumentParser(description='Harmonizes json files')
+    parser.add_argument('-i','--input',help='input directory with json files or just json file')
+    parser.add_argument('-c','--configFile',help='path to a configuration text file')
+    parser.add_argument('-o','--output', help='output directory or output file')
+
+    # parse command line arguments
+    args = parser.parse_args()
+    input = args.input
+    configFile = args.configFile
+    output = args.output
+
+
+    if not (input and configFile and output):
+        print parser.print_help()
+        exit(1)
+
+    # read config file
+    conf_data = get_conf(configFile)
+
+
+    # checks if input is directory, otherwise assumes a single xml file
+    srcFiles = None
+    if os.path.isdir(input):
+        srcFiles = filter(lambda x:x.endswith('.json'), os.listdir(input))
+    else: 
+        srcFiles = [input]
+    
+    # checks if output (sub)directory exists, otherwise makes dirs recursively
+    if not os.path.isdir(output):
+        os.makedirs(output)
+        
+    for srcFile in srcFiles:
+        dataset = get_dataset(srcFile)
+        new_dataset = postprocess(dataset,conf_data)
+        
+        _,fname = os.path.split(srcFile)
+        fname = fname.replace('xml','json')
+        output = os.path.join(os.path.abspath(output),fname)
+        
+        save_data(new_dataset,output)	    
 
 if __name__ == "__main__":
 	main()
