@@ -237,47 +237,62 @@ def postprocess(dataset,rules):
     
     return dataset
     
-def main():
+    
+def get_user_input():
+    """
+    returns user input
+    """
     parser = argparse.ArgumentParser(description='Harmonizes json files')
-    parser.add_argument('-i','--input',help='input directory with json files or just json file')
+    parser.add_argument('-i','--input',help='input directory with json files')
     parser.add_argument('-c','--configFile',help='path to a configuration text file')
-    parser.add_argument('-o','--output', help='output directory or output file')
+    parser.add_argument('-o','--output', help='output directory')
 
     # parse command line arguments
     args = parser.parse_args()
-    input = args.input
+    root = args.input
     configFile = args.configFile
     output = args.output
 
-
-    if not (input and configFile and output):
+    if not (root and configFile and output):
         print parser.print_help()
         exit(1)
-
-    # read config file
-    conf_data = get_conf(configFile)
-
-
-    # checks if input is directory, otherwise assumes a single xml file
-    srcFiles = None
-    if os.path.isdir(input):
-        srcFiles = filter(lambda x:x.endswith('.json'), os.listdir(input))
-    else: 
-        srcFiles = [input]
     
-    # checks if output (sub)directory exists, otherwise makes dirs recursively
-    if not os.path.isdir(output):
-        os.makedirs(output)
+    return root, configFile, output
+
+
+
+def main():
+    
+    # input from standard io
+    srcDir, configFile, outputDir = get_user_input()
+    
+    # read config file from disk
+    conf_data = get_conf(configFile)
+    
+    # walks through json files, harmonizes and saves files
+    for parent, subdirs, fnames in os.walk(srcDir):
+        srcFiles = filter(lambda x:x.endswith('.json'), fnames) 
+        if not srcFiles: continue
         
-    for srcFile in srcFiles:
-        path2file = os.path.join(os.path.abspath(input),srcFile)
-        logging.info('harmonizing file ... %s', path2file)
-        dataset = get_dataset(path2file)
-        new_dataset = postprocess(dataset,conf_data)
+        # create output directories according to structure from input directories
+        input = os.path.abspath(srcDir)
+        absparent = os.path.abspath(parent)
+        commonprefix = os.path.commonprefix([absparent,input])
+        subdir = absparent.replace(commonprefix,"")
+        outputpath = outputDir + subdir
+        if not os.path.isdir(outputpath):
+            os.makedirs(outputpath)
         
-        fname = srcFile.replace('xml','json')
-        path2output = os.path.join(os.path.abspath(output),fname)
-        save_data(new_dataset,path2output)	    
+        # harmonize and save each json file
+        for srcFile in srcFiles:
+            path2file = os.path.join(absparent,srcFile)
+            logging.info('harmonizing file ... %s', path2file)
+            dataset = get_dataset(path2file)
+            new_dataset = postprocess(dataset,conf_data)
+        
+            fname = srcFile.replace('xml','json')
+            path2file = os.path.join(outputpath,fname)
+            save_data(new_dataset,path2file)	    
 
 if __name__ == "__main__":
 	main()
