@@ -19,6 +19,12 @@ import codecs
 import pycountry 
 import csv
 from urllib2 import urlopen
+import logging
+
+
+# Display progress logs on stdout
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
+
 
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
@@ -264,14 +270,14 @@ def main():
         os.makedirs(output)
         
     for srcFile in srcFiles:
-        dataset = get_dataset(srcFile)
+        path2file = os.path.join(os.path.abspath(input),srcFile)
+        logging.info('harmonizing file ... %s', path2file)
+        dataset = get_dataset(path2file)
         new_dataset = postprocess(dataset,conf_data)
         
-        _,fname = os.path.split(srcFile)
-        fname = fname.replace('xml','json')
-        output = os.path.join(os.path.abspath(output),fname)
-        
-        save_data(new_dataset,output)	    
+        fname = srcFile.replace('xml','json')
+        path2output = os.path.join(os.path.abspath(output),fname)
+        save_data(new_dataset,path2output)	    
 
 if __name__ == "__main__":
 	main()
