@@ -134,9 +134,15 @@ def replace(dataset,facetName,old_value,new_value):
                 elif extra['key'] == facetName and old_value == "*":
                     key = extra['value']
                     try:
-                        if ":" in key:
-                            key = key.split(":")[-1]
-                        new_value = MAP_DICTIONARIES[facetName][key]
+                        keys = key.split(";")
+                        new_value = ''
+                        for key in keys:
+                            if ":" in key:
+                                key = key.split(":")[-1]
+                            if new_value:
+                                new_value = new_value + ";" + MAP_DICTIONARIES[facetName][key]
+                            else:
+                                new_value = MAP_DICTIONARIES[facetName][key]
                         extra['value'] = new_value
                     except:
                         pass
