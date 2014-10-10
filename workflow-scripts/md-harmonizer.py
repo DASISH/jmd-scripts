@@ -26,6 +26,14 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 
+# regular expressions used in mapping dates of any format to utc format
+UTC = re.compile(r'\d{4}-(\d{2})?-(\d{2})?(T\d{2}:\d{2}(:\d{2}(\.\d{2})?)?[-+]\d{2}:\d{2})?')
+NON_UTC = re.compile(r'\d{4}(.\d{2})?(.\d{2})?')
+YYYY = re.compile(r'(\d{4})')
+MM = re.compile(r'\d{4}.(\d{2})')
+DD = re.compile(r'\d{4}.\d{2}.(\d{2})')
+
+# global variables for language and country mapping
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
 
@@ -39,7 +47,6 @@ for ln in list(pycountry.languages):
     except:
         pass
         
-  
 COUNTRIES = {}
 for ct in list(pycountry.countries):
     try:
@@ -50,7 +57,6 @@ for ct in list(pycountry.countries):
     
 
 MAP_DICTIONARIES = {}
-
 MAP_DICTIONARIES["Language"] = LANGUAGES
 MAP_DICTIONARIES["Country"] = COUNTRIES
 
@@ -90,19 +96,26 @@ def date2UTC(old_date):
     """
     changes date to UTC format
     """
-    # UTC format =  YYYY-MM-DDThh:mm:ssZ
-    utc = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z')
-   
-    utc_year = re.compile(r'\d{4}') # year (4-digit number)
-    if utc.search(old_date):
-        new_date = utc.search(old_date).group()
+    # UTC format =  YYYY-MM-DDThh:mm:ss.ss[+_]hh:mm
+    
+    new_date = ''
+    if UTC.search(old_date):
+        new_date = UTC.search(old_date).group()
         return new_date
-    elif utc_year.search(old_date):
-        year = utc_year.search(old_date).group()
-        new_date = year + '-07-01T11:59:59Z'
-        return new_date
-    else:
-        return '' # if converting cannot be done, make date empty
+        
+    if NON_UTC.search(old_date): 
+        temp_date = NON_UTC.search(old_date).group()
+        yyyy = mm = dd = ''
+        if YYYY.search(temp_date):   
+            yyyy = YYYY.search(temp_date).groups(0)[0]
+            if yyyy: new_date = yyyy
+        if MM.search(temp_date):   
+            mm = MM.search(temp_date).groups(0)[0]
+            if mm: new_date = new_date + "-" + mm
+        if DD.search(temp_date):   
+            dd = DD.search(temp_date).groups(0)[0]
+            if dd: new_date = new_date + "-" + dd
+    return new_date
     
        
 def replace(dataset,facetName,old_value,new_value):
