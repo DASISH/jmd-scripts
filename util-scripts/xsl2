@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PWD=`dirname $0`
+
+export CLASSPATH="`find $PWD/lib/saxon -type f -name '*.jar' -exec echo -n "{}:" \;`$CLASSPATH"
+java -cp $CLASSPATH -Xmx1536m net.sf.saxon.Transform $*
+
+exit $?
