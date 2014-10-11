@@ -37,9 +37,13 @@ DD = re.compile(r'\d{4}.\d{2}.(\d{2})')
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
 
-LANGUAGES = {}
 for row in rows:
-    LANGUAGES[row[0]] = row[-2] # key: the first field, value: the second from last field
+    language_name = row[-2]
+    if row[0]: LANGUAGES[row[0]] = language_name
+    if row[1]: LANGUAGES[row[1]] = language_name
+    if row[2]: LANGUAGES[row[2]] = language_name
+    if row[3]: LANGUAGES[row[3]] = language_name
+
 for ln in list(pycountry.languages):
     try:
         LANGUAGES[ln.alpha2] = ln.name
@@ -137,6 +141,7 @@ def replace(dataset,facetName,old_value,new_value):
                         keys = key.split(";")
                         new_value = ''
                         for key in keys:
+                            key = key.strip()
                             if ":" in key:
                                 key = key.split(":")[-1]
                             if new_value:
