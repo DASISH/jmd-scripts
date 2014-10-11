@@ -138,20 +138,20 @@ def replace(dataset,facetName,old_value,new_value):
                     return dataset
                 elif extra['key'] == facetName and old_value == "*":
                     key = extra['value']
-                    try:
-                        keys = key.split(";")
-                        new_value = ''
-                        for key in keys:
-                            key = key.strip()
-                            if ":" in key:
-                                key = key.split(":")[-1]
-                            if new_value:
-                                new_value = new_value + ";" + MAP_DICTIONARIES[facetName][key]
-                            else:
-                                new_value = MAP_DICTIONARIES[facetName][key]
-                        extra['value'] = new_value
-                    except:
-                        pass
+                    keys = key.split(";")
+                    keys = map(lambda x:x.strip(),keys)
+                    new_value = set()
+                    for key in keys:
+                        if ":" in key:
+                            key = key.split(":")[-1].strip()
+                        pValue = ''
+                        try:
+                            pValue = MAP_DICTIONARIES[facetName][key]
+                        except KeyError:
+                            pValue = key
+                        for elem in pValue.split(';'):
+                            new_value.add(elem)
+                    extra['value'] = ";".join(new_value)
                     return dataset
                 else:
                     pass
