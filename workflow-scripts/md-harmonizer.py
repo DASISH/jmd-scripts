@@ -37,6 +37,7 @@ DD = re.compile(r'\d{4}.\d{2}.(\d{2})')
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
 
+LANGUAGES = {}
 for row in rows:
     language_name = row[-2]
     if row[0]: LANGUAGES[row[0]] = language_name
