@@ -26,12 +26,25 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 
+# regular expressions used in mapping dates of any format to utc format
+UTC = re.compile(r'\d{4}-(\d{2})?-(\d{2})?(T\d{2}:\d{2}(:\d{2}(\.\d{2})?)?[-+]\d{2}:\d{2})?')
+NON_UTC = re.compile(r'\d{4}(.\d{2})?(.\d{2})?')
+YYYY = re.compile(r'(\d{4})')
+MM = re.compile(r'\d{4}.(\d{2})')
+DD = re.compile(r'\d{4}.\d{2}.(\d{2})')
+
+# global variables for language and country mapping
 u = urlopen('http://www-01.sil.org/iso639%2D3/iso-639-3.tab')
 rows = list(csv.reader(u, delimiter='\t'))[1:]
 
 LANGUAGES = {}
 for row in rows:
-    LANGUAGES[row[0]] = row[-2] # key: the first field, value: the second from last field
+    language_name = row[-2]
+    if row[0]: LANGUAGES[row[0]] = language_name
+    if row[1]: LANGUAGES[row[1]] = language_name
+    if row[2]: LANGUAGES[row[2]] = language_name
+    if row[3]: LANGUAGES[row[3]] = language_name
+
 for ln in list(pycountry.languages):
     try:
         LANGUAGES[ln.alpha2] = ln.name
@@ -39,7 +52,6 @@ for ln in list(pycountry.languages):
     except:
         pass
         
-  
 COUNTRIES = {}
 for ct in list(pycountry.countries):
     try:
@@ -50,7 +62,6 @@ for ct in list(pycountry.countries):
     
 
 MAP_DICTIONARIES = {}
-
 MAP_DICTIONARIES["Language"] = LANGUAGES
 MAP_DICTIONARIES["Country"] = COUNTRIES
 
@@ -90,19 +101,26 @@ def date2UTC(old_date):
     """
     changes date to UTC format
     """
-    # UTC format =  YYYY-MM-DDThh:mm:ssZ
-    utc = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z')
-   
-    utc_year = re.compile(r'\d{4}') # year (4-digit number)
-    if utc.search(old_date):
-        new_date = utc.search(old_date).group()
+    # UTC format =  YYYY-MM-DDThh:mm:ss.ss[+_]hh:mm
+    
+    new_date = ''
+    if UTC.search(old_date):
+        new_date = UTC.search(old_date).group()
         return new_date
-    elif utc_year.search(old_date):
-        year = utc_year.search(old_date).group()
-        new_date = year + '-07-01T11:59:59Z'
-        return new_date
-    else:
-        return '' # if converting cannot be done, make date empty
+        
+    if NON_UTC.search(old_date): 
+        temp_date = NON_UTC.search(old_date).group()
+        yyyy = mm = dd = ''
+        if YYYY.search(temp_date):   
+            yyyy = YYYY.search(temp_date).groups(0)[0]
+            if yyyy: new_date = yyyy
+        if MM.search(temp_date):   
+            mm = MM.search(temp_date).groups(0)[0]
+            if mm: new_date = new_date + "-" + mm
+        if DD.search(temp_date):   
+            dd = DD.search(temp_date).groups(0)[0]
+            if dd: new_date = new_date + "-" + dd
+    return new_date
     
        
 def replace(dataset,facetName,old_value,new_value):
@@ -120,13 +138,20 @@ def replace(dataset,facetName,old_value,new_value):
                     return dataset
                 elif extra['key'] == facetName and old_value == "*":
                     key = extra['value']
-                    try:
+                    keys = key.split(";")
+                    keys = map(lambda x:x.strip(),keys)
+                    new_value = set()
+                    for key in keys:
                         if ":" in key:
-                            key = key.split(":")[-1]
-                        new_value = MAP_DICTIONARIES[facetName][key]
-                        extra['value'] = new_value
-                    except:
-                        pass
+                            key = key.split(":")[-1].strip()
+                        pValue = ''
+                        try:
+                            pValue = MAP_DICTIONARIES[facetName][key]
+                        except KeyError:
+                            pValue = key
+                        for elem in pValue.split(';'):
+                            new_value.add(elem)
+                    extra['value'] = ";".join(new_value)
                     return dataset
                 else:
                     pass
