@@ -42,3 +42,11 @@ In the template map file a facet can
 When multiple values are allowed findMapping.sh will generate one XPath per metadata profile which combines possible XPaths by a `string-join(distinct-values(...),';')`.
 
 When refering to a concept allow multiple values can be switched off (on is the default) by adding `@cmd:allowedMultipleValues="false"` to the field element.
+
+### Notes
+
+This tools mimics the VLO mapping from concepts to facets, but its not completely inline. The VLO also supports blacklist patters, which this tool doesn't support yet.
+
+## xsl2.sh
+
+Shell wrapper around the Saxon Java libraries. See the [Saxon documentation](http://saxonica.com/documentation/html/using-xsl/commandline.html) for a description of the commandline.

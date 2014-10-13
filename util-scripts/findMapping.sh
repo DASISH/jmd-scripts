@@ -133,7 +133,7 @@ if [ $verbose -ne 0 ]; then
 	echo "DASISH facet mapping: $dasish_fc"
 fi
 
-xsl2 -xsl:${0%%/*}/createMapping.xsl -s:$dasish_fc +clarin_fc=$clarin_fc profile_cache=$profile_cache > $output_file
+${0%%/*}/xsl2 -xsl:${0%%/*}/createMapping.xsl -s:$dasish_fc clarin_fc=$clarin_fc profile_cache=$profile_cache > $output_file
 
 if [ $verbose -ne 0 ]; then
 	echo "Output file: $output_file"

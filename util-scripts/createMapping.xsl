@@ -67,8 +67,7 @@
 	
 	<xsl:template match="@cmd:facetConcepts">
 		<xsl:for-each select="tokenize(current(),'\s+')">
-			<xsl:apply-templates select="$xsl2 -xsl:${0%%/*}/createMapping.xsl -s:$dasish_fc +clarin_fc=$clarin_fc profile_cache=$profile_cache > $output_file
-				fc//facetConcept[@name=current()]" mode="clarin"/>
+			<xsl:apply-templates select="$fc//facetConcept[@name=current()]" mode="clarin"/>
 		</xsl:for-each>
 	</xsl:template>
 	
