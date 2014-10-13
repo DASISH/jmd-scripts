@@ -121,7 +121,7 @@ def main():
     
     group_name = split_structure(abs_path)[5].lower() #  extracts group name
 	
-    f = open('august_upload_times.txt','a')
+    f = open('upload_times.txt','a')
    # f.write('#new session\n')
     ckan = ckanapi.RemoteCKAN(dst_url, dst_apikey)
     
