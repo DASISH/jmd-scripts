@@ -14,18 +14,20 @@ Most of the scrips in the workflow-scripts are for uploading datasets one by one
 Bulk uploading
 --------------
 
-The ckanapi [1] supports bulk uploading. To do bulk uploading, we first need to create a jsonline file. This file  consists of json texts separated by '\n' [2]. We have a python script [3] that turns seprate json files (datasets) into a single jsonline file. Once we have created a jsonline file or a set of jsonline files, then we can do bulk upload operations using ckanapi [1].
+The ckanapi [1] supports bulk uploading. To do bulk uploading, we first need to create a jsonline file. This file  consists of json texts separated by '\n' [2]. We have a python script [3] that turns separate json files (datasets) into a single jsonline file. Once we have created a jsonline file or a set of jsonline files, then we can do bulk upload operations using ckanapi [1].
 
-For example
--------------
-#bulk operation unzipped
+# For example
+
+bulk operation (unzipped)
+-------------------------
 ckanapi load datasets -I g_cessda.jsonl -p 2 -r url -a apikey -l log_cessda
 
 or
 
 ckanapi load datasets -I g_cessda.jsonl -c /path/to/config -l log_cessda
 
-# Bulk upload zipped
+Bulk upload (zipped)
+----------------------
 ckanapi load datasets -I g_cessda.jsonl.gz -z -p 2 -r url -a apikey -l log_cessda
 
 or
