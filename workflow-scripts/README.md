@@ -29,5 +29,7 @@ or
 ckanapi load datasets -I g_cessda.jsonl.gz -z -c /path/to/config -l log_cessda
 
 [1] https://github.com/ckan/ckanapi
+
 [2] http://jsonlines.org/
+
 [3] https://github.com/DASISH/jmd-scripts/blob/master/workflow-scripts/make-jsonl.py
