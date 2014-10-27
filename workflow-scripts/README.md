@@ -20,12 +20,16 @@ For example
 -------------
 #bulk operation unzipped
 ckanapi load datasets -I g_cessda.jsonl -p 2 -r url -a apikey -l log_cessda
+
 or
+
 ckanapi load datasets -I g_cessda.jsonl -c /path/to/config -l log_cessda
 
 # Bulk upload zipped
 ckanapi load datasets -I g_cessda.jsonl.gz -z -p 2 -r url -a apikey -l log_cessda
+
 or
+
 ckanapi load datasets -I g_cessda.jsonl.gz -z -c /path/to/config -l log_cessda
 
 [1] https://github.com/ckan/ckanapi
