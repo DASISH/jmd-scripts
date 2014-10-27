@@ -9,7 +9,7 @@ There are two types of workflow for uploading data into CKAN
 1. uploading datasets one by one
 2. bulk uploading (parallel uploading)
 
-Most of the scripts in the workflow-scripts are for uploading datasets one by one. For bulk uploading
+Most of the scripts in the workflow-scripts are for uploading datasets one by one. For bulk uploading, see below:
 
 Bulk uploading
 --------------
