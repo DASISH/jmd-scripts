@@ -40,6 +40,7 @@
          will be created to ensure no directory has more than that
          number of files. -->
     <dir path="dariah/results/cmdi" id="cmdi" max-files="1000"/>
+    <dir path="dariah/results/ese" id="ese" max-files="1000"/>
     <dir path="dariah/results/dc" id="dc" max-files="1000"/>
     <dir path="dariah/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
     <dir path="dariah/results/ddi-2.5" id="ddi25" max-files="1000"/>
@@ -69,6 +70,10 @@
     <format match="schema" value="http://www.ddialliance.org/Specification/DDI-Lifecycle/3.1/XMLSchema/instance.xsd">
       <action type="strip"/>
       <action type="save" dir="ddi31" suffix=".xml"/>
+    </format>
+    <format match="prefix" value="oai_europeana">
+      <action type="strip"/>
+      <action type="save" dir="ese" suffix=".xml"/>
     </format>
     <format match="prefix" value="oai_dc">
       <action type="strip"/>
