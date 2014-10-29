@@ -29,10 +29,10 @@
     <!-- When the attribute 'max-files' is non-zero, subdirectories
          will be created to ensure no directory has more than that
          number of files. -->
-    <!-- <dir path="oai-pmh" id="orig" max-files="0"/> -->
+    <dir path="oai-pmh" id="orig" max-files="0"/>
     <dir path="clarin/results/cmdi" id="cmdi" max-files="1000"/>
     <!-- <dir path="clarin/results/olac" id="olac" max-files="1000"/> -->
-    <!-- <dir path="clarin/results/dc" id="dc" max-files="1000"/> -->
+    <dir path="clarin/results/dc" id="dc" max-files="1000"/>
   </directories>
 
   <!-- ### actions to take on metadata formats (in order of preference) ### -->
@@ -41,22 +41,30 @@
       <action type="save" dir="orig" suffix=".xml"/>
       <action type="strip"/>
       <action type="save" dir="cmdi" suffix=".xml"/>
-    </format> 
+    </format>
+    <format match="prefix" value="oai_dc">
+      <action type="save" dir="orig" suffix=".xml"/>
+      <action type="strip"/>
+      <action type="save" dir="dc" suffix=".xml"/>
+    </format>
   </actions>
 
   <!-- ### list of providers ### -->
-  <providers>     
-   <!-- MPI --> 
-  <provider url="http://corpus1.mpi.nl/ds/oaiprovider/oai2"/> 
-   
-   <!-- DK -->
-   <!-- <provider url="http://clarin.dk/oaiprovider"/> -->  
-   
-   <!-- DANS works --> 
-   <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/> 
+  <providers>
+    <!-- MPI -->
+    <provider url="http://corpus1.mpi.nl/ds/oaiprovider/oai2"/>
 
-   <!-- OEW works -->
-   <provider url="http://clarin.oeaw.ac.at/oaiprovider"/>  
+    <!-- University of Copenhagen -->
+    <provider url="http://clarin.dk/oaiprovider"/>
+
+    <!-- DANS with CMDI support -->
+    <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/>
+
+    <!-- DANS easy, does not support CMDI, fall back to DC -->
+    <provider url="http://easy.dans.knaw.nl/oai"/>
+
+    <!-- OEAW -->
+    <provider url="http://clarin.oeaw.ac.at/oaiprovider"/>
 
   </providers>
 </config>
