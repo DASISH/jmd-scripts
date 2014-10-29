@@ -54,6 +54,9 @@
    
    <!-- DANS works --> 
    <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/> 
+  <!-- Menzo suggested this url to get access to the datasets with and without CMDI, which also includes datasets
+  that come from http://oai.clarin-beta.dans.knaw.nl/OAIHandler-->
+  <provider url="http://easy.dans.knaw.nl/oai"/> 
 
    <!-- OEW works -->
    <provider url="http://clarin.oeaw.ac.at/oaiprovider"/>  
