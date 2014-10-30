@@ -28,7 +28,11 @@ In the template map file a facet can
 
 ``<mapping-table xmlns:cmd="http://www.clarin.eu/cmd/">
   ...
-  <field name="Language" cmd:facetConcepts="language languageCode languages">``
+  <field name="Language" cmd:facetConcepts="language languageCode languages">
+    <cmd:facet>language</cmd:facet>
+    <cmd:facet>languageCode</cmd:facet>
+    <cmd:facet>languages</cmd:facet>
+  </field>``
 
 #### Refer to a concept
 
@@ -42,6 +46,11 @@ In the template map file a facet can
 When multiple values are allowed findMapping.sh will generate one XPath per metadata profile which combines possible XPaths by a `string-join(distinct-values(...),';')`.
 
 When refering to a concept allow multiple values can be switched off (on is the default) by adding `@cmd:allowedMultipleValues="false"` to the field element.
+
+#### Order of XPaths
+
+The XPaths found by the facet/concept mapping get inserted into the place where the corresponding element is found. This makes it possible to insert default DASISH mappings that will overrule the CLARIN mappings.
+
 
 ### Notes
 
