@@ -16,7 +16,8 @@ As input it needs
 A list of all parameters and their defaults can be obtained by running:
 
 ```sh
-./findMapping.sh -h```
+./findMapping.sh -h
+```
 	
 ### Template map file
 
