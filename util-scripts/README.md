@@ -15,7 +15,8 @@ As input it needs
 
 A list of all parameters and their defaults can be obtained by running:
 
-	./findMapping.sh -h
+```shell
+./findMapping.sh -h```
 	
 ### Template map file
 
@@ -26,20 +27,29 @@ In the template map file a facet can
 
 #### Refer to one or more VLO facets
 
-``<mapping-table xmlns:cmd="http://www.clarin.eu/cmd/">
+```xml
+<mapping-table xmlns:cmd="http://www.clarin.eu/cmd/">
   ...
   <field name="Language" cmd:facetConcepts="language languageCode languages">
     <cmd:facet>language</cmd:facet>
     <cmd:facet>languageCode</cmd:facet>
     <cmd:facet>languages</cmd:facet>
-  </field>``
+  </field>
+  ...
+</mapping-table>```
 
 #### Refer to a concept
 
-``<mapping-table xmlns:cmd="http://www.clarin.eu/cmd/">
+```xml
+<mapping-table xmlns:cmd="http://www.clarin.eu/cmd/">
   ...
   <field name="url">
-    <cmd:concept>http://www.isocat.org/datcat/DC-2546</cmd:concept>``
+    ...
+    <cmd:concept>http://www.isocat.org/datcat/DC-2546</cmd:concept>
+    ...
+  </field>
+  ...
+</mapping-table>```
     
 #### Allow multiple values
 
