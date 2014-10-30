@@ -37,7 +37,8 @@ In the template map file a facet can
     <cmd:facet>languages</cmd:facet>
   </field>
   ...
-</mapping-table>```
+</mapping-table>
+```
 
 #### Refer to a concept
 
@@ -50,7 +51,8 @@ In the template map file a facet can
     ...
   </field>
   ...
-</mapping-table>```
+</mapping-table>
+```
     
 #### Allow multiple values
 
