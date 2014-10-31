@@ -3,10 +3,10 @@ Binyam Gebrekidan Gebre
 @Max Planck Institute, 2014
 
 HOW TO RUN
-$ python md-harmonizer.py -i /path/to/inputDir -o /path/to/outputdir -c /path/to/config.txt
-Input: directory where there are json files (output of the mapper)
+$ python md-harmonizer.py -i /path/to/input.json -o /path/to/output.json -c /path/to/config.txt
+Input: json file (the input comes from the output of the mapper)
 Configuration file (this is a text file, where actions or rules are specified, In the scripts folder, you can see the format of the config.tx)
-Output: directory where outputfiles are saved to (ready to be validated and/or uploaded to CKAN) 
+Output:json file (the output of the postprocessor is another json file ready to be validated and/or uploaded to CKAN) 
 """
 
 import numpy as np
@@ -20,6 +20,9 @@ import pycountry
 import csv
 from urllib2 import urlopen
 import logging
+import copy
+import hashlib
+import cPickle as pickle
 
 
 # Display progress logs on stdout
@@ -128,12 +131,12 @@ def replace(dataset,facetName,old_value,new_value):
     replaces old value with new value for a given facet
     """
     for facet in dataset:
-        if str_equals(facet,facetName) and dataset[facet] == old_value:
+        if str_equals(facet,facetName) and str_equals(dataset[facet],old_value):
             dataset[facet] = new_value
             return dataset
         if facet == 'extras':
             for extra in dataset[facet]:
-                if extra['key'] == facetName and extra['value'] == old_value:
+                if extra['key'] == facetName and str_equals(extra['value'],old_value):
                     extra['value'] = new_value
                     return dataset
                 elif extra['key'] == facetName and old_value == "*":
@@ -164,7 +167,12 @@ def replace_token(dataset,facetName,old_value,new_value):
     """
     for facet in dataset:
         if str_equals(facet,facetName) and old_value in dataset[facet]:
-            dataset[facet] = dataset[facet].replace(old_value,new_value)
+            if new_value not in dataset[facet]:
+                dataset[facet] = dataset[facet].replace(old_value,new_value)
+            else:
+                dataset[facet] = dataset[facet].replace(old_value,new_value)
+                temp = set(dataset[facet].split(";"))
+                dataset[facet] = ";".join(temp)
             return dataset
         if facet == 'extras':
             for extra in dataset[facet]:
@@ -262,7 +270,56 @@ def postprocess(dataset,rules):
     
     return dataset
     
-    
+
+def get_groupName(path):
+    """
+    gets the group name from the path
+    """
+    return path.split('/')[5] 
+
+def add_OAI_Origin(dataset):
+    """
+    adds a facet for OAI origin
+    """
+    value = ""
+    for extra in dataset['extras']:
+        if extra['key'] == 'MetadataSource':
+            value = extra['value'].split('/')[8] # splits path by / and takes the 8th entry as the provider name
+            value = value.replace('_',' ')
+            break
+    dataset['extras'].append({"key":"OAI_Origin","value":value})
+
+def trim_metadataSource(dataset):
+    """
+    updates a metadatasource field value; removes "/home/work"
+    """
+    for extra in dataset['extras']:
+        if extra['key'] == 'MetadataSource':
+            extra['value'] = extra['value'][10:]
+            break
+
+def get_checksum(json_data):
+    """
+    Calculates thecksum of the json_data, without including the MapperVersion
+    """
+    check_data = copy.deepcopy(json_data)
+    index = 0
+    for extra in check_data['extras']:
+        if(extra['key'] == 'MapperVersion'):
+            check_data['extras'].pop(index)
+            break
+        index+= 1
+    checksum = hashlib.sha256(unicode(json.dumps(check_data))).hexdigest()
+    return checksum
+
+def get_checksum_table(checksum_pkl):
+    """
+    """
+    if os.path.isfile(checksum_pkl):
+        return pickle.load(open(checksum_pkl, 'rb'))
+    else:
+        return {}
+        
 def get_user_input():
     """
     returns user input
@@ -271,30 +328,33 @@ def get_user_input():
     parser.add_argument('-i','--input',help='input directory with json files')
     parser.add_argument('-c','--configFile',help='path to a configuration text file')
     parser.add_argument('-o','--output', help='output directory')
+    parser.add_argument('-d','--dict', help='dictionary of files and their checksums')
 
     # parse command line arguments
     args = parser.parse_args()
     root = args.input
     configFile = args.configFile
     output = args.output
+    checksum_pkl = args.dict
+    
 
-    if not (root and configFile and output):
+    if not (root and configFile and output and checksum_pkl):
         print parser.print_help()
         exit(1)
     
-    return root, configFile, output
-
-
+    return root, configFile, output, checksum_pkl
 
 def main():
     
     # input from standard io
-    srcDir, configFile, outputDir = get_user_input()
+    srcDir, configFile, outputDir, checksum_pkl = get_user_input()
     
+    checksum_table = get_checksum_table(checksum_pkl)
     # read config file from disk
     conf_data = get_conf(configFile)
     
     # walks through json files, harmonizes and saves files
+    num = 0
     for parent, subdirs, fnames in os.walk(srcDir):
         srcFiles = filter(lambda x:x.endswith('.json'), fnames) 
         if not srcFiles: continue
@@ -311,13 +371,40 @@ def main():
         # harmonize and save each json file
         for srcFile in srcFiles:
             path2file = os.path.join(absparent,srcFile)
-            logging.info('harmonizing file ... %s', path2file)
+            logging.info('harmonizing file [%d] %s', num, path2file)
+            num += 1
             dataset = get_dataset(path2file)
             new_dataset = postprocess(dataset,conf_data)
+            
+            # add groupName
+            group_name = get_groupName(path2file)
+            dataset['groups'] = [{'name': group_name}]
+            
+            # add data provider
+            add_OAI_Origin(dataset)
+            
+            # remove unnecessary part
+            trim_metadataSource(dataset)
+            
+            # add hash ids (aka names) to datasets
+            checksum = get_checksum(dataset)
+            if checksum_table.get(srcFile) != checksum:
+                dataset['name'] = checksum
+                checksum_table[srcFile] = checksum
+              
+                # add title
+                if "title" not in dataset:      
+                    dataset['title'] = 'Untitled'
+  
+                # save result as json
+                fname = srcFile.replace('xml','json')
+                path2file = os.path.join(outputpath,fname)
+                save_data(new_dataset,path2file)
+            else:
+                logging.info('the above dataset exists')
+        pickle.dump(checksum_table, open(checksum_pkl, "wb" ))
         
-            fname = srcFile.replace('xml','json')
-            path2file = os.path.join(outputpath,fname)
-            save_data(new_dataset,path2file)	    
+                    
 
 if __name__ == "__main__":
-	main()
+    main()
