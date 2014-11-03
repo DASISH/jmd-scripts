@@ -44,6 +44,7 @@
     <dir path="cessda/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
     <dir path="cessda/results/ddi-2.5" id="ddi25" max-files="1000"/>
     <dir path="cessda/results/ddi-3.1" id="ddi31" max-files="1000"/>
+    <dir path="cessda/results/datacite" id="dms3" max-files="1000"/>
   </directories>
 
 
@@ -70,6 +71,11 @@
       <action type="strip"/>
       <action type="save" dir="ddi31" suffix=".xml"/>
     </format>
+    <!-- DataCite Metadata Schema 3 -->
+    <format match="prefix" value="datacite">
+      <action type="strip"/>
+      <action type="save" dir="dms3" suffix=".xml"/>
+    </format>
     <format match="prefix" value="oai_dc">
       <action type="strip"/>
       <action type="save" dir="dc" suffix=".xml"/>
@@ -90,6 +96,9 @@
     </provider>
     <provider url="http://oai.datacite.org/oai" name="SND via DataCite">
       <set>SND.SND</set>
+    </provider>
+    <provider url="http://oai.datacite.org/oai" name="UKDA via DataCite">
+      <set>BL.UKDA</set>
     </provider>
 
     <provider url="http://easy.dans.knaw.nl/oai/"/>
