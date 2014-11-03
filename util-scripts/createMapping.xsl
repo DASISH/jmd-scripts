@@ -56,19 +56,12 @@
 		</xsl:if>
 	</xsl:function>
 	
-	<xsl:template match="field">
-		<xsl:copy>
-			<xsl:apply-templates select="@* except @cmd:facetConcepts"/>
-			<xsl:apply-templates select="@cmd:facetConcepts"/>
-			<xsl:copy-of select="cmd:findConceptPaths(cmd:concept,not(@cmd:allowMultipleValues eq 'false'))"/>
-			<xsl:apply-templates select="node() except cmd:concept"/>
-		</xsl:copy>
+	<xsl:template match="cmd:facet">
+		<xsl:apply-templates select="$fc//facetConcept[@name=current()]" mode="clarin"/>
 	</xsl:template>
 	
-	<xsl:template match="@cmd:facetConcepts">
-		<xsl:for-each select="tokenize(current(),'\s+')">
-			<xsl:apply-templates select="$fc//facetConcept[@name=current()]" mode="clarin"/>
-		</xsl:for-each>
+	<xsl:template match="cmd:concept">
+		<xsl:copy-of select="cmd:findConceptPaths(current(),not(../@cmd:allowMultipleValues eq 'false'))"/>
 	</xsl:template>
 	
 	<xsl:template match="facetConcept" mode="clarin">
