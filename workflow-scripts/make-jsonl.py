@@ -3,7 +3,7 @@ Binyam Gebrekidan Gebre
 @Max Planck Institute, 2014
 
 HOW TO RUN
-$ python make-jsonl.py -i /path/to/json -o /path/to/output.jsonl
+$ python md-harmonizer.py -i /path/to/json -o /path/to/output.jsonline
 Input: a directory that has json files
 Output:jsonline file 
 """
@@ -39,7 +39,7 @@ def get_user_input():
     """
     parser = argparse.ArgumentParser(description='Harmonizes json files')
     parser.add_argument('-i','--input',help='input directory with json files')
-    parser.add_argument('-o','--output', help='output directory')
+    parser.add_argument('-o','--output', help='output file name')
 
     # parse command line arguments
     args = parser.parse_args()

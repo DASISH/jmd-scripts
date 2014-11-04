@@ -1,7 +1,18 @@
 #GroupName,,datasetName,,facetName,,old_value,,new_value,,action
+*,,*,,title,,,,Untitled,,replace
+*,,*,,Language,,In het Nederlands.,,Dutch,,replace
+*,,*,,Language,,In het Nederlands,,Dutch,,replace
+*,,*,,Language,,In het Nederlands.,,Dutch,,replace_token
+*,,*,,Language,,In het Nederlands,,Dutch,,replace_token
+*,,*,,Language,,Nederlands,,Dutch,,replace
+*,,*,,Language,,xxx,,unknown,,replace
+*,,*,,Language,,français,,French,,replace
+*,,*,,Language,,Francés,,French,,replace
+*,,*,,Language,,Inglés,,English,,replace
 *,,*,,Language,,*,,*,,replace
 *,,*,,Country,,*,,*,,replace
 *,,*,,CreationDate,,*,,UTC,,changeDateFormat
+*,,*,,PublicationDate,,*,,UTC,,changeDateFormat
 *,,*,,Subject,,[Paris],,Paris,,replace
 *,,*,,Subject,,AARDEWERK,,Pottery,,replace
 *,,*,,Subject,,Archeologisch: booronderzoek,,Archaeological: drilling research,,replace
@@ -9,8 +20,8 @@
 *,,*,,Subject,,HISTORIA,,History,,replace
 *,,*,,Subject,,Historia,,History,,replace
 *,,*,,Subject,,IJZERTIJD,,Iron Age,,replace
-*,,*,,Subject,,LATE MIDDELEEUWEN,,Late Midle Ages,,replace
-*,,*,,Subject,,MIDDELEEUWEN,,Midle Ages,,replace
+*,,*,,Subject,,LATE MIDDELEEUWEN,,Late Middle Ages,,replace
+*,,*,,Subject,,MIDDELEEUWEN,,Middle Ages,,replace
 *,,*,,Subject,,Modélisation,,Modeling,,replace
 *,,*,,Subject,,NIEUWE TIJD,,Modern Time,,replace
 *,,*,,Subject,,PROSPECTIE,,Prospecting,,replace
