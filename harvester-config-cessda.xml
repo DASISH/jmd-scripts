@@ -44,7 +44,7 @@
     <dir path="cessda/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
     <dir path="cessda/results/ddi-2.5" id="ddi25" max-files="1000"/>
     <dir path="cessda/results/ddi-3.1" id="ddi31" max-files="1000"/>
-    <dir path="cessda/results/datacite" id="dms3" max-files="1000"/>
+    <dir path="cessda/results/datacite-3.0" id="dms3" max-files="1000"/>
   </directories>
 
 
