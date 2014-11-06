@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 echo "### Step 1: Harvest metadata ###"
@@ -12,9 +13,14 @@ echo "### Step 3: Run mapper on harvested records ###"
 echo "-----------------------------------------------"
 ./03-runmapper.sh > logs/03-map.txt
 
-echo "### Step 4: Upload mapped records ###"
+echo "### Step 4: Run harmonizer on mapped records ###"
+echo "-----------------------------------------------"
+./04-runharmonizer.sh > logs/04-harmonize.tx 
+
+echo "### Step 5: Run make-jsonline on harmonized records ###"
+echo "-----------------------------------------------"
+./04-runmake-jsonl.sh > logs/05-jsonline.tx 
+
+echo "### Step 6: Upload records ###"
 echo "-------------------------------------"
-for x in /home/work/work/02-mapped/*; do
-    y=`echo $x | sed 's/.*\\///'`
-    ./04-upload.sh $x/json $y
-done
+./06-runuploader.sh > logs/06-upload.txt
