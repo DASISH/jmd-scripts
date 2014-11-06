@@ -54,12 +54,6 @@
     <!-- University of Copenhagen -->
     <provider url="http://clarin.dk/oaiprovider"/>
 
-    <!-- DANS with CMDI support -->
-    <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/>
-
-    <!-- DANS easy, does not support CMDI, fall back to DC -->
-    <provider url="http://easy.dans.knaw.nl/oai"/>
-
     <!-- OEAW -->
     <provider url="http://clarin.oeaw.ac.at/oaiprovider"/>
 

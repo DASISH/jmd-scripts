@@ -88,18 +88,22 @@
     <provider url="http://demo2.dariah.eu/colreg/OAIHandler"/>
     <provider url="http://acdh.oeaw.ac.at/acdh-repo/oai"/>
     <provider url="http://fedora.phaidra.univie.ac.at/oaiprovider/"/>
-    <provider url="http://arachne.uni-koeln.de/OAI-PMH/oai-pmh.xml"/>
+
+    <!-- currently not harvestable: provider url="http://arachne.uni-koeln.de/OAI-PMH/oai-pmh.xml"/ -->
+
     <provider url="http://demo.imeji.org/fledgeddata/oai/"/>
     <provider url="http://pubman.mpdl.mpg.de/escidoc-oaiprovider/"/>
     <provider url="http://zuse.zib.de/fledgeddata/oai/"/>
     <provider url="http://edoc.bbaw.de/oai2/oai2.php"/>
     <provider url="http://archaeologydataservice.ac.uk/oai/archives/OAIHandler"/>
-    <provider url="http://archaeologydataservice.ac.uk/oai/journals/OAIHandler"/>
+
     <provider url="http://staroai.theses.fr/OAIHandler"/>
     <provider url="http://www.calames.abes.fr/oai/oai2.aspx"/>
-    <provider url="http://oai.openedition.org"/>
+    <!-- currently not harvestable: provider url="http://oai.openedition.org"/ -->
     <provider url="http://sldr.org/oai-pmh.php"/>
-    <provider url="http://www.etnoinfolab.org/oai/oai.php"/>
+
+    <!-- currently not harvestable: provider url="http://www.etnoinfolab.org/oai/oai.php"/> -->
+
     <provider url="http://www.arzenal.si/oai/arzenal"/>
     <provider url="http://isn3.zrc-sazu.si/etnofolk/OAI-2.0/oai.php"/>
     <provider url="http://www.sistory.si/oai.php"/>
