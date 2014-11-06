@@ -1,6 +1,6 @@
 
-input=/home/work/work/02-mapped-old # input directory with input of directories of json files
-output=/home/work/work/03-harmonized-test # output directory where directories of json files are saved
+input=/home/work/work/02-mapped # input directory with input of directories of json files
+output=/home/work/work/03-harmonized # output directory where directories of json files are saved
 config=config.txt #  normalization and replace rule file
 checksumTable=ctable.pkl # dictionary of file names and their hashes
 
