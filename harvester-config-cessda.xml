@@ -54,6 +54,7 @@
       <action type="strip"/>
       <action type="save" dir="cmdi" suffix=".xml"/>
     </format>
+
     <!--
 	The different DDI versions are most reliably matched by schema
 	address, since there seems to be variable usage of namespaces
@@ -71,11 +72,14 @@
       <action type="strip"/>
       <action type="save" dir="ddi31" suffix=".xml"/>
     </format>
+
     <!-- DataCite Metadata Schema 3 -->
     <format match="prefix" value="datacite">
       <action type="strip"/>
       <action type="save" dir="dms3" suffix=".xml"/>
     </format>
+
+    <!-- Dublin Core -->
     <format match="prefix" value="oai_dc">
       <action type="strip"/>
       <action type="save" dir="dc" suffix=".xml"/>
@@ -90,6 +94,7 @@
     <provider url="http://nesstar.ucd.ie/oai-pmh/"/>
     <provider url="http://www.lidata.eu/oaiprovider"/>
     <provider url="http://oai.ukdataservice.ac.uk/oai/provider"/>
+
     <provider url="http://spraakbanken.gu.se/resources/oai-pmh"/>
     <provider url="http://oai.datacite.org/oai" name="GESIS via DataCite">
       <set>GESIS.ARCHIV</set>
@@ -101,6 +106,11 @@
       <set>BL.UKDA</set>
     </provider>
 
-    <provider url="http://easy.dans.knaw.nl/oai/"/>
+    <!-- DANS with CMDI support -->
+    <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/>
+
+    <!-- DANS easy, does not support CMDI, fall back to DC -->
+    <provider url="http://easy.dans.knaw.nl/oai"/>
+
   </providers>
 </config>
