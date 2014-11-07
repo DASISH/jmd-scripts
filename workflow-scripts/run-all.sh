@@ -19,7 +19,7 @@ echo "-----------------------------------------------"
 
 echo "### Step 5: Run make-jsonline on harmonized records ###"
 echo "-----------------------------------------------"
-./04-runmake-jsonl.sh > logs/05-jsonline.tx 
+./05-runmake-jsonl.sh > logs/05-jsonline.tx 
 
 echo "### Step 6: Upload records ###"
 echo "-------------------------------------"
