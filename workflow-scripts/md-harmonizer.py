@@ -324,7 +324,8 @@ def date2YYYYs(old_date):
         yyyy = ''
         if UTC.search(date):
             yyyy = YYYY.search(date).group()
-            years.append(yyyy)
+            if yyyy:
+                years.append(yyyy)
     all_years = ";".join(years)
     return all_years
 
