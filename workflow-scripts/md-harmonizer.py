@@ -191,7 +191,8 @@ def change_all_subdates(old_date):
     remaining = old_date
     while remaining:
         new_date, remaining = date2UTC(remaining)
-        new_dates.append(new_date)
+        if new_date:
+            new_dates.append(new_date)
 
     all_dates = ";".join(new_dates)
     return all_dates
