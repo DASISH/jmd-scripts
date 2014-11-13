@@ -29,7 +29,7 @@ import cPickle as pickle
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 # regular expressions used in mapping dates of any format to utc format
-UTC = re.compile(r'\d{4}(.\d{2}.\d{2})?(T\d{2}:\d{2}(:\d{2}(\.\d{2})?)?[-+]\d{2}:\d{2})?')
+UTC = re.compile(r'\d{4}(-\d{2}(-\d{2})?)?(T\d{2}:\d{2}(:\d{2}(\.\d{2})?)?[-+]\d{2}:\d{2})?')
 YYYY = re.compile(r'(\d{4})')
 
 # global variables for language and country mapping
