@@ -37,7 +37,7 @@ def get_user_input():
     """
     returns user input
     """
-    parser = argparse.ArgumentParser(description='Harmonizes json files')
+    parser = argparse.ArgumentParser(description='Makes jsonline file')
     parser.add_argument('-i','--input',help='input directory with json files')
     parser.add_argument('-o','--output', help='output file name')
 

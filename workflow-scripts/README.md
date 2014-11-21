@@ -7,7 +7,7 @@ Binyam (MPI-PL) / 2014
 There are two types of workflow for uploading data into CKAN
 
 1. uploading datasets one by one
-2. bulk uploading (parallel uploading)
+2. bulk uploading (parallel uploading) -- is much faster
 
 Most of the scripts in the workflow-scripts are for uploading datasets one by one. For bulk uploading, see below:
 

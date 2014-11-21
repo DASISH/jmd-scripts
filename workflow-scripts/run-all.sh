@@ -15,11 +15,11 @@ echo "-----------------------------------------------"
 
 echo "### Step 4: Run harmonizer on mapped records ###"
 echo "-----------------------------------------------"
-./04-runharmonizer.sh > logs/04-harmonize.tx 
+./04-runharmonizer.sh > logs/04-harmonize.txt 
 
 echo "### Step 5: Run make-jsonline on harmonized records ###"
 echo "-----------------------------------------------"
-./05-runmake-jsonl.sh > logs/05-jsonline.tx 
+./05-runmake-jsonl.sh > logs/05-jsonline.txt 
 
 echo "### Step 6: Upload records ###"
 echo "-------------------------------------"
