@@ -29,4 +29,4 @@ echo "-------------------------------------"
 
 echo "### Step 7: Index records ###"
 echo "-------------------------------------"
-./07-runIndexer.sh
+./07-runIndexer.sh > logs/07-index.txt
