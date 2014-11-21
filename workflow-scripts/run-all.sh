@@ -26,3 +26,7 @@ echo "-----------------------------------------------"
 echo "### Step 6: Upload records ###"
 echo "-------------------------------------"
 ./06-runuploader.sh > logs/06-upload.txt
+
+echo "### Step 7: Index records ###"
+echo "-------------------------------------"
+./07-runIndexer.sh
