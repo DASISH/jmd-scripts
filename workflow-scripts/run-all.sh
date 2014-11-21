@@ -3,7 +3,9 @@
 
 echo "### Step 1: Harvest metadata ###"
 echo "--------------------------------"
-./01-harvest.sh > logs/01-harv.txt
+./01-harvest-cessda.sh > logs/01-harv.txt
+./01-harvest-clarin.sh > logs/01-harv.txt
+./01-harvest-dariah.sh > logs/01-harv.txt
 
 echo "### Step 2: Update the mapper from svn (if necessary) ###"
 echo "---------------------------------------------------------"
