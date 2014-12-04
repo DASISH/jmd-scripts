@@ -8,13 +8,13 @@
       https://github.com/TheLanguageArchive/oai-harvest-manager for
       details.
 
-      This file covers endpoints belonging to DARIAH members.
+      This file covers endpoints belonging to CESSDA members.
   -->
 
   <!-- ### configuration settings ### -->
   <settings>
     <!-- Working directory. -->
-    <workdir>/home/work/work/01-harvested</workdir>
+    <workdir>/home/work/jmd/data/01-harvested</workdir>
 
     <!-- Maximum number of attempts per record before giving up. -->
     <max-retry-count>2</max-retry-count>
@@ -39,12 +39,12 @@
     <!-- When the attribute 'max-files' is non-zero, subdirectories
          will be created to ensure no directory has more than that
          number of files. -->
-    <dir path="dariah/results/cmdi" id="cmdi" max-files="1000"/>
-    <dir path="dariah/results/ese" id="ese" max-files="1000"/>
-    <dir path="dariah/results/dc" id="dc" max-files="1000"/>
-    <dir path="dariah/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
-    <dir path="dariah/results/ddi-2.5" id="ddi25" max-files="1000"/>
-    <dir path="dariah/results/ddi-3.1" id="ddi31" max-files="1000"/>
+    <dir path="cessda/results/cmdi" id="cmdi" max-files="1000"/>
+    <dir path="cessda/results/dc" id="dc" max-files="1000"/>
+    <dir path="cessda/results/ddi-1.2.2" id="ddi122" max-files="1000"/>
+    <dir path="cessda/results/ddi-2.5" id="ddi25" max-files="1000"/>
+    <dir path="cessda/results/ddi-3.1" id="ddi31" max-files="1000"/>
+    <dir path="cessda/results/datacite" id="dms3" max-files="1000"/>
   </directories>
 
 
@@ -54,6 +54,7 @@
       <action type="strip"/>
       <action type="save" dir="cmdi" suffix=".xml"/>
     </format>
+
     <!--
 	The different DDI versions are most reliably matched by schema
 	address, since there seems to be variable usage of namespaces
@@ -71,10 +72,14 @@
       <action type="strip"/>
       <action type="save" dir="ddi31" suffix=".xml"/>
     </format>
-    <format match="prefix" value="oai_europeana">
+
+    <!-- DataCite Metadata Schema 3 -->
+    <format match="prefix" value="datacite">
       <action type="strip"/>
-      <action type="save" dir="ese" suffix=".xml"/>
+      <action type="save" dir="dms3" suffix=".xml"/>
     </format>
+
+    <!-- Dublin Core -->
     <format match="prefix" value="oai_dc">
       <action type="strip"/>
       <action type="save" dir="dc" suffix=".xml"/>
@@ -84,28 +89,30 @@
 
   <!-- ### list of providers ### -->
   <providers>
-    <provider url="http://gams.uni-graz.at/oaiprovider/"/>
-    <provider url="http://demo2.dariah.eu/colreg/OAIHandler"/>
-    <provider url="http://acdh.oeaw.ac.at/acdh-repo/oai"/>
-    <provider url="http://fedora.phaidra.univie.ac.at/oaiprovider/"/>
+    <provider url="http://ddaonline.dda.dk/oai-pmh/"/>
+    <provider url="http://nesstar.snd.gu.se/oai-pmh/"/>
+    <provider url="http://nesstar.ucd.ie/oai-pmh/"/>
+    <provider url="http://www.lidata.eu/oaiprovider"/>
+    <provider url="http://oai.ukdataservice.ac.uk/oai/provider"/>
 
-    <!-- currently not harvestable: provider url="http://arachne.uni-koeln.de/OAI-PMH/oai-pmh.xml"/ -->
+    <provider url="http://spraakbanken.gu.se/resources/oai-pmh"/>
+    <provider url="http://oai.datacite.org/oai" name="GESIS via DataCite">
+      <set>GESIS.ARCHIV</set>
+    </provider>
+    <provider url="http://oai.datacite.org/oai" name="SND via DataCite">
+      <set>SND.SND</set>
+    </provider>
+    <provider url="http://oai.datacite.org/oai" name="UKDA via DataCite">
+      <set>BL.UKDA</set>
+    </provider>
 
-    <provider url="http://demo.imeji.org/fledgeddata/oai/"/>
-    <provider url="http://pubman.mpdl.mpg.de/escidoc-oaiprovider/"/>
-    <provider url="http://zuse.zib.de/fledgeddata/oai/"/>
-    <provider url="http://edoc.bbaw.de/oai2/oai2.php"/>
-    <provider url="http://archaeologydataservice.ac.uk/oai/archives/OAIHandler"/>
+    <provider url="http://easy.dans.knaw.nl/oai/"/>
 
-    <provider url="http://staroai.theses.fr/OAIHandler"/>
-    <provider url="http://www.calames.abes.fr/oai/oai2.aspx"/>
-    <!-- currently not harvestable: provider url="http://oai.openedition.org"/ -->
-    <provider url="http://sldr.org/oai-pmh.php"/>
+    <!-- DANS with CMDI support -->
+    <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/>
 
-    <!-- currently not harvestable: provider url="http://www.etnoinfolab.org/oai/oai.php"/> -->
+    <!-- DANS easy, does not support CMDI, fall back to DC -->
+    <provider url="http://easy.dans.knaw.nl/oai"/>
 
-    <provider url="http://www.arzenal.si/oai/arzenal"/>
-    <provider url="http://isn3.zrc-sazu.si/etnofolk/OAI-2.0/oai.php"/>
-    <provider url="http://www.sistory.si/oai.php"/>
   </providers>
 </config>

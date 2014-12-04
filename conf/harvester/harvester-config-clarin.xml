@@ -4,7 +4,7 @@
   <!-- ### configuration settings ### -->
   <settings>
     <!-- Working directory. -->
-    <workdir>/home/work/work/01-harvested</workdir>
+    <workdir>/home/work/jmd/data/01-harvested</workdir>
 
     <!-- Maximum number of attempts per record before giving up. -->
     <max-retry-count>2</max-retry-count>

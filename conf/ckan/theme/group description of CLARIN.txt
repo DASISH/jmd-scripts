@@ -1,0 +1,38 @@
+CLARIN is a large-scale pan-European collaborative effort to create, coordinate and make language resources and technology available and readily useable. CLARIN offers scholars the tools to allow computer-aided language processing, addressing one or more of the multiple roles language plays (i.e. carrier of cultural content and knowledge, instrument of communication, component of identity and object of study) in the Humanities and Social Sciences.
+
+CLARIN Key Points
+----------------------
+The CLARIN initiative offers:
+
+Comprehensive service to the humanities disciplines with respect to language resources and technology.
+Technology overcoming the many boundaries currently fragmenting the resources and tools landscape as it is given by institutional, structural and semantic interoperability problems.
+Tools and resources that will be interoperable across languages and domains, thus addressing the issue of preserving and supporting the multilingual and multicultural European heritage.
+Comprehensive training and education programs that include university education in the different member states.
+Improvement and extension of web-based collaborations, i.e. creating virtual working groups breaking the discipline boundaries.
+Development or improvement of standards for language resource maintenance.
+A persistent and stable infrastructure that researchers can rely on for the next decades.
+
+CLARIN Key Technologies
+------------------------------
+To achieve these challenging goals CLARIN will be built on and contribute to a number of key technologies coming from the major initiatives advancing the eScience paradigm:
+
+It includes Data Grid technology to connect the repositories as being implemented in the DAM-LR pilot project and web services the various centres provide;
+It builds on ideas launched by the Digital Library community to create Live Archives, and will further such initiatives;
+It incorporates, and contributes to, Semantic Web technology to overcome the structural and semantic encoding problems;
+It incorporates advanced multi-lingual language processing technology that supports cultural and linguistic integration.
+
+Overall Organizational Framework
+----------------------------------------
+We propose to create a European Resources Infrastructure that will be based on an open European Federation of strong service centres and repositories that jointly provide the whole European Humanities (and Social Sciences) community with
+
+knowledge about the existence of language resources,
+coordinated creation of, archiving of, and access to such resources,
+access to services and tools that would allow scholars to operate on such resources,
+bundling of and access to expertise related to specific language processing problems
+CLARIN will be built on the existing national infrastructures and all the knowledge gathered from the European funded projects in our domain. At the European level an efficient umbrella organization has to be set-up that will be responsible for the unification and organizations at the European level. CLARIN will also link up closely with appropriate infrastructures in other humanities disciplines. CLARIN sees itself as a research infrastructure that will offer specialized resources, tools/services and knowledge and will easily join with other complementary initiatives in the humanities area.
+
+Budget Considerations
+---------------------------
+The overall costs for the CLARIN Research Infrastructure are estimated with 165 Mio € covering all European countries. In some countries already powerful institutions are available at regional and national level that may form the pillars of the CLARIN research infrastructure.
+
+For the member states the costs for establishing and maintaining (10 years) a national research infrastructure with widely overlapping goals compared to CLARIN will vary. Depending on several factors, such as the ambition, envisaged decentralization and existing infrastructure, we assume it will vary from 2 up to 10 Mio €. Of course some countries have a more decentralized structure resulting in a number of such centres, others have a more centralized structure and again other states may want to share centres crossing the national boundaries to share the burden. For the estimated 20 national infrastructures we end up at about 120 Mio €, leaving about 45 Mio € for the pan-European efforts. This estimate includes European wide aspects such as comprehensive training and education programs.

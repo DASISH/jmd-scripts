@@ -1,0 +1,50 @@
+The grand vision for the Digital Research Infrastructure for the Arts and Humanities (DARIAH) is to facilitate long-term access to, and use of, all European Arts and Humanities (A+H) digital research data.
+
+The DARIAH infrastructure will be a connected network of people, information, tools, and methodologies for investigating, exploring and supporting work across the broad spectrum of the digital humanities.
+
+Researchers will use DARIAH to:
+
+find and use a wide range of research data from across Europe
+exchange knowledge, expertise, methodologies, and practices across domains and disciplines
+
+ensure that they work to accepted standards and follow best practice
+experiment and innovate in collaboration with other scholars
+
+The core strategy of DARIAH is to bring together national, regional, and local endeavours to form a cooperative infrastructure where complementarities and new challenges are clearly identified and acted upon.
+
+Organisation
+---------------
+DARIAH is a social and technical infrastructure which is composed of people, expertise, information, knowledge, content, methods, tools and technologies for investigating, exploring and supporting work across the broad spectrum of the digital arts and humanities.
+
+To coordinate these activities and help secure long-term funding for digital arts and humanities research in Europe, DARIAH is being established as a European organisation or ERIC (European Research Infrastructure Consortium).
+
+Once the DARIAH ERIC is established, the DARIAH-EU Organisational Structure will be introduced.  The key Boards within DARIAH-EU are the General Assembly, the National Coordinators Committee, the Joint Research Committee and the Scientific Board.
+
+The Board of Directors is responsible for the day-to-day operations of DARIAH in consultation with the Senior Management Team and with the support of the DARIAH-EU Coordination Office.
+
+Our partners
+---------------
+DARIAH submitted an application to the European Commission to establish a European Research Infrastructure Consortium (ERIC). This legal framework will facilitate the long-term sustainability of DARIAH.
+
+The Founding Members of the DARIAH-ERIC are Austria, Belgium, Croatia, Cyprus, Denmark, France, Germany, Greece, Ireland, Italy, Luxembourg, Malta, The Netherlands, Serbia and Slovenia.
+
+France will be the host country of the DARIAH-ERIC.
+
+Contact us
+-------------
+
+For enquiries about DARIAH, please contact:
+
+DARIAH-EU Coordination Office
+
+Göttingen Centre for the Digital Humanities (GCDH)
+
+Papendiek 16 - Heyne Haus -
+
+37073, Göttingen
+
+Germany
+
+Email: dariah-info at dariah.eu
+
+Telephone: +49 (0) 551 39 20476

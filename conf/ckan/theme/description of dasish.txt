@@ -1,0 +1,26 @@
+Connecting Infrastructures
+====================
+
+This project brings together all 5 ESFRI research infrastructure initiatives in the social sciences and humanities (SSH) represented each by some centers:
+
+**CLARIN** – Common Language Resources and Technology Infrastructure
+
+**DARIAH** – Digital Research Infrastructure for the Arts and Humanities
+
+**CESSDA** – Council of European Social Science Data Archives
+
+**ESS** – European Social Survey
+
+**SHARE** – Survey of Health, Ageing and Retirement in Europe
+
+The goal is to determine areas of possible synergies in the infrastructure development and to work on a few concrete joint activities.
+
+The rationale behind
+-----------------------
+The rationale behind this idea is that double developments should be prevented,
+initiatives should mutually benefit from the advanced work of the others and
+to establish joint integrated domains where this makes sense for the SSH users.
+Joint activities will be along the following dimensions: understanding the different architectural solutions, assessing and improving data and metadata quality, setting up a tools and services forum, improve the quality of survey data, locate and improve data preservation and curation services, develop a joint shared data access and enrichment framework (AAI, PIDs, joint Metadata, Workflow implementations, joint annotation framework), jointly work on legal and ethical aspects, carry out much training and education work, work on disseminating the results.
+
+DASISH is a FP7-INFRASTRUCTURES-2011-1 project
+Grant Agreement 283646, Combination of CP & CSA. The project duration is 36 months, starting on 1st January 2012 and ending on 31st December 2014.

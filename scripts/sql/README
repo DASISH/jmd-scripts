@@ -1,0 +1,20 @@
+### 
+### #run the following commands on the terminal to do the CKAN postgres optimisation
+####
+
+
+## Step 1: login into ckan postgres database, which is called ckan_default (maybe different if you have given it a different name when you created it
+sudo -u postgres psql ckan_default
+# this will ask you for password, you give it the password
+
+
+## Step 2: once you are inside ckan_default database, type the following sql scripts one by one.
+
+\i /home/work/ckan_db_optimization_scripts/constraints.sql; 
+\i /home/work/ckan_db_optimization_scripts/what_to_alter.sql; 
+\i /home/work/ckan_db_optimization_scripts/add_eric_indexes.sql; 
+
+
+## Step 3: quit from the database (after you have run the above three scripts, type ‘\q’ to quit)
+\q
+# that is it, the optimisation is done
