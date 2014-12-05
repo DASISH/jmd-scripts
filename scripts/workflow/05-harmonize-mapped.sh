@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-# Traverse the the mapped files and harmonize them. This script assumes the 02-mapped structure described in the mapper script. The harmonizing process creates a directory named 03-harmonized. In it, you will find the same structure as in the 02-mapped directory.
+# Traverse the the mapped files and harmonize them. This script assumes the 02-mapped structure described in the mapper script. The harmonizing process creates a directory named 03-harmonized. In it, you will find the same structure as in the 02-mapped directory. Next to harmonizing, create a dictionary from filenames to hashes.
 
 # create the dict directory if it is not there
 if [ ! -d "${JMDDataDir}/dict" ]; then
