@@ -1,17 +1,17 @@
 jmd-scripts
 ===========
 
-This repository contains scripts and documentation relevant to the workflow of the Joint Metadata Domain (task 5.4). For replication of the web portal, please refer to the installation instruction in the doc directory.
+This repository contains scripts and documentation relevant to the workflow of the Joint Metadata Domain (task 5.4). If you would like to replicate the web portal, please refer to the installation instruction in the doc directory.
 
 The JMD's workflow comprises three stages, as illustrated below:
 
 ![workflow illustration](https://raw.githubusercontent.com/DASISH/jmd-scripts/master/workflow.png "JMD Workflow")
 
-1. Fetching of original metadata records with **OAI-PMH harvesting**.
-2. Performing **semantic mappings** into the JMD's internal
-representation.
-3. Ingestion of metadata into, and other setup related to, the **web
-portal**.
+1. Fetching of original metadata records using the **OAI-PMH protocol**.
+2. Performing **semantic mapping** into the JMD's internal
+representation. In case metadata takes the form of CMDI, the definitions used are expanded and corresponding mapping tables will be generated. If not, the semantic mapper use static mapping tables.
+3. Normalisation. This is the process of ** conforming values to a standard representation **. For example, fields representing a date are checked and converted to a specific format.
+4. Uploading. Once the records are normalised, they are uploaded to the ** CKAN database **
 
 Between stages, the metadata is stored on the file system to minimise
 interdependency between the stages.
@@ -43,4 +43,4 @@ repository](https://github.com/DASISH/md-mapping).
 
 The current implementation is based on [CKAN](http://ckan.org/), but
 it could equally be built on top of other Solr based systems. Some
-performance tweaks are used, which will be documented here.
+performance tweaks are used, which represented in the scripts.
