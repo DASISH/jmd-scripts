@@ -1,11 +1,7 @@
 jmd-scripts
 ===========
 
-This repository contains scripts and documentation relevant to the
-workflow of the Joint Metadata Domain (task 5.4). The intention is
-that eventually the documentation here would be sufficient to
-replicate the implementation completely. (We're not quite there
-yet...)
+This repository contains scripts and documentation relevant to the workflow of the Joint Metadata Domain (task 5.4). For replication of the web portal, please refer to the installation instruction in the doc directory.
 
 The JMD's workflow comprises three stages, as illustrated below:
 
