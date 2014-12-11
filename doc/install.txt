@@ -1,0 +1,617 @@
+Instruction for installation of the JMD
+
+
+1. Introduction
+
+   The DASISH joint metadata domain is a website presenting metadata provided by members from the CESSDA, CLARIN and DARIAH organisations. The website is based on CKAN. The following describes the steps needed to go through when building the site.
+
+
+2. Components
+
+The CKAN package depends on several packages. Here we assume an installation on a Linux server. The choice of Linux distribution is free, as long as it can support the package referred to here:
+
+
+a. Java development kit
+
+   Required: OpenJDK 6 officially, tested with Oracle's version 7 JDK.
+
+   It is probably most convient to use the Oracle package. Other package might work, but were not tested. In the environment in which the packages will be installed, proper configuration of java is assumed: environment variables should be set in such a way that Java can be found.
+
+
+b. Jetty
+
+   Recommended version: most recent; the JMD was tested with Jetty 9.2.4
+
+   Like Java, it is probably most convenient to use the original package, that is, not a package from a Linux distribution.
+
+
+c. Solr
+
+   Same as for Jetty, it might be best to use the original package.
+
+
+d. A web server, or actually, two: Apache and Nginx
+
+   While it can do with one, Apache, CKAN relies on the Nginx web server as well. The reason for this is that while Apache provides more options to tune, Nginx provides more efficient caching. This strategy is not unique to CKAN installations.
+
+   The CKAN installation will modify the Apache2 configuration. When installinge will check if everything goes according to plan.
+
+
+e. PostgreSQL
+
+   Required: version 8.4
+
+
+f. Python
+
+   The Python programming language, version 2.6 or 2.7. The following python packages are also required:
+
+   libpq,      c interface to PostgreSQL
+   libpq-dev,  development files, needed when installing CKAN from source
+   pip,        for installing and managing Python packages
+   virtualenv, the virtual Python environment builder
+
+   Please install these packages before we turn to the installation of the CKAN package itself.
+
+   < Please describe the Python virtual environment. When we need it the concept will be in place. >
+
+
+g. Other packages needed
+
+   Git distributed version control
+
+
+h. CKAN
+
+   The CKAN package constitutes the DASISH Joint Metadata Domain. The package can be installed in two ways. First, there is the 'installation from package'. The package available from CKAN is intended for the Ubuntu 12.04 TLS system. Since you might be on a system different from this, and also because some problems encountered when trying it out, we suggest following the second path: installation from source. Instructions for the installation can be found at
+
+   http://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html
+
+   We will describe the installation below however.
+
+
+i. DASISH packages from Github
+
+   In addition to installing the CKAN package, the JMD site needs some extra configuration.
+
+   First, in order to obtain the data to be presented, it needs to be harvested. For this, the TLA's harvest manager, which you can find at
+
+   https://github.com/TheLanguageArchive/oai-harvest-manager
+
+   should be used.
+
+   Second, the data harvested needs to be mapped onto the format represented in the DASISH JMD site. For this, the TLA / DASISH metadata mapper is needed:
+
+   https://github.com/DASISH/md-mapper
+
+
+   For each mapping, the mapper needs a definition in the forms which can be found at
+
+   https://github.com/DASISH/md-mapping
+
+   Note: while the mapping definitions are specific to the DASISH JMD site, the mapper itself is not.
+
+   Third, we need the Bash scripts that constitute the work flow from harvesting, via mapping and normalising to importing into the site's database. These scripts are specific to the site:
+
+   https://github.com/DASISH/jmd-scripts
+
+   The aformentioned packages available from the TLA and DASISH Github groups are all concerned with importing harvested data into the site's database. Only one package is needed to run the site itself:
+
+   https://github.com/DASISH/ckanext-dasish
+
+   This package turns the standard CKAN instance into the DASISH Joint Metadata domain site. The package provides logos, texts, and templates. It also extends some of the CKAN definitions.
+
+
+We assume some packages to be existing in some arbitrary way, some will be described. We will describe a package more elaborately whenever the configuration (of the package or interface) requires changes to be made to the filesystem. So for example, PostgreSQL is assumend to be just there, accessible via some port, while the Solr package directories will be modified to some extend.
+
+
+3. Jetty installation
+
+When installing Jetty, make sure
+
+/etc/default/jetty
+
+with something like
+
+JETTY_HOME=/opt/jetty/ # Point to Jetty home
+JAVA_HOME=/opt/jdk1.7.0_45/ # Path to Java
+NO_START=0 # Start on boot
+JETTY_HOST=0.0.0.0 # Listen to all hosts
+JETTY_USER=jetty # Run as this user
+
+exists. Jetty uses port 8080 by default. If another application is already using this port, please change the value of the
+
+jetty.port
+
+parameter in
+
+/opt/jetty/start.ini
+
+to something else, for example: 8081
+
+You can now try out Jetty by pointing the browser to
+
+http://localhost:8081/
+
+It will respond with something like
+
+Error 404 - Not Found.
+No context on this server matched or handled this request.
+Contexts known to this server are:
+
+Powered by Jetty:// Java Web Server
+
+which is not a 'real error'; it only means that no web applications have been added yet. We will return to jetty later, that is, we will install solr into the jetty
+
+webapps
+
+directory.
+
+
+4. Solr installation
+
+   Before installing solr, first stop jetty:
+
+   sudo service jetty stop
+
+   Next, copy the web application archive (war) file from the unpacked archive to jetty. Please assume that the archive is unpacked into the
+
+   solr-4.10.2 directory
+
+   Change into this directory. Also assume that jetty was installed into the
+
+   /opt/jetty
+
+   directory. After that, connect Solr to Jetty. This is done in the following way.
+
+   sudo cp -a solr-4.10.2/dist/solr-4.10.2.war /opt/jetty/webapps/solr.war
+
+   Copy the example solr instance from the unpacked archive.
+
+   sudo cp -a solr-4.10.2/example/solr /opt/solr
+
+   Copy the solr server from the unpacked archive
+
+   sudo cp -a solr-4.10.2/dist /opt/solr
+
+   Copy extensions from the unpacked archive also
+
+   sudo cp -a solr-4.10.2/contrib /opt/solr
+
+   Connect the solr example instance to jetty
+
+   sudo cp -a solr-4.10.2/example/contexts/solr-jetty-context.xml /opt/jetty/webapps/solr.xml
+
+   sudo cp -a solr-4.10.2/example/lib/ext/* /opt/jetty/lib/ext/
+
+   Let jetty know where solr is. Add
+
+   JAVA_OPTIONS="-Dsolr.solr.home=/opt/solr$JAVA_OPTIONS"
+
+   to the
+
+   /etc/defaults/jetty
+
+   file. Adapt
+
+   /opt/solr/collection1/conf/solrconfig.xml
+
+   so that solr can read the files in dist and contrib directories of the installed package:
+
+   <lib dir="../contrib/extraction/lib" regex=".*\.jar" />
+   <lib dir="../dist/" regex="solr-cell-\d.*\.jar" />
+
+   <lib dir="../contrib/clustering/lib/" regex=".*\.jar" />
+   <lib dir="../dist/" regex="solr-clustering-\d.*\.jar" />
+
+   <lib dir="../contrib/langid/lib/" regex=".*\.jar" />
+   <lib dir="../dist/" regex="solr-langid-\d.*\.jar" />
+
+   <lib dir="../contrib/velocity/lib" regex=".*\.jar" />
+   <lib dir="../dist/" regex="solr-velocity-\d.*\.jar" />
+   This step is important, since later on, we will adapt the solr installation to suit ckan.
+
+   Change the ownership of the files in /opt/solr to the jetty user.
+
+   sudo chown -R jetty:jetty /opt/solr
+
+   Now you can start Jetty. On Ubuntu, this looks something like this:
+
+   sudo service jetty start
+   Starting Jetty: . OK Wed Nov 12 08:34:20 CET 2014
+
+   After this, Solr can now be accessed at port 8081 on the host.
+
+   Note: unlike Tomcat, there is no separate management centre in Jetty. You connect to the web applications (like a Solr instance) directly. If you have not used Jetty before, this might be a good moment to try and connect to Solr. It is also a good moment to inspect the logfiles presented by Solr.
+
+
+5. CKAN installation
+
+   Now that the Nginx, Apache, Jetty and Solr packages are installed and configured, we turn to the installation of CKAN. Actually, the Joint Metadata Domain will be constructed in several steps: the installation of the CKAN package, the installation of the ckanapi package, the installation of the DASISH extensions to CKAN, and finally, the configuration of the JMD.
+
+   First, we prepare the CKAN installation by looking at the web server configuration.
+
+
+a. CKAN and Apache
+
+   When installing CKAN, files will be added to the
+
+   /etc/apache2/sites-available
+
+   directory. Also, the
+
+   ports.conf
+
+   may be changed. In orde to check these changes for consistency, it is a good idea to create a backup copy of the apache2 directories. Basically, the
+
+   default
+
+   file in the
+
+   sites-available
+
+   directory needs to consistently refer to the other files in the directory. The CKAN installation will add the
+
+   ckan_default
+
+   and
+
+   datapusher
+
+   file. In any case, make sure that the port numbers associated with these files are unique, that is: they should not coincide with the configuration existing at the time of the installation. Finally, make sure that the
+
+   sites-enabled
+
+   directory reflects what is needed by ckan and the rest of the system.
+
+
+b. CKAN and Nginx
+
+   When it comes to CKAN, the Nginx web server is supposed to act like a proxy for Apache. This means that the Nginx configuration, it should make clear requests to CKAN need to be passed on. Like in the case of Apache, the CKAN installation will change the
+
+   /etc/nginx/sites-available
+
+   directory. Please make sure that ports are assigned and reference in a consistent way, and also, that the necessary sites are enable via the
+
+   /etc/nginx/sites-available
+
+   directory.
+
+
+c. CKAN installation (from source)
+
+   As said in the introduction, it is probably best to install CKAN from source. Instructions guiding the installation can be found here:
+
+   http://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html
+
+   Before starting, please check if all the necessary Python packages are installed on the system. For a list, please refer to the components section.
+
+   CKAN's installation intruction describes what needs to be done when you want to create a development environment. Please regard this as optional. Here we will describe the installation and configuration of a production enviroment. So there is no reason to define symlinks in the way described by the instruction.
+
+   Python's virtual environment concept does suit a production instance also, so we create such one in the following way - we assume the installation of CKAN into
+
+   /usr/lib
+
+   however, another location would be fine also. Please note that we will install the DASISH specific extension of CKAN in this location as well.
+
+   sudo mkdir -p /usr/lib/ckan/default
+   sudo chown `whoami` /usr/lib/ckan/default
+
+   virtualenv --no-site-packages /usr/lib/ckan/default
+   The --no-site-packages flag is deprecated; it is now the default behavior.
+   New python executable in /usr/lib/ckan/default/bin/python
+   Installing distribute.............................................................................................................................................................................................done.
+   Installing pip...............done.
+
+   Activate the environment
+   . /usr/lib/ckan/default/bin/activate
+
+   Note: 'default' will appear in the prompt. You can now install the source code into the virtual envirionment:
+
+   pip install -e 'git+https://github.com/ckan/ckan.git@ckan-2.2.1#egg=ckan'
+
+   Obtaining ckan from git+https://github.com/ckan/ckan.git@ckan-2.2.1#egg=ckan
+     Cloning https://github.com/ckan/ckan.git (to ckan-2.2.1) to ./default/src/ckan
+     Running setup.py egg_info for package ckan
+       /usr/lib/python2.7/distutils/dist.py:267: UserWarning: Unknown distribution option: 'message_extractors'
+         warnings.warn(msg)
+
+       warning: no files found matching '*' under directory 'ckanext/*/i18n'
+       no previously-included directories found matching '.git'
+       warning: no files found matching 'CHANGELOG.txt'
+
+   Installing collected packages: ckan
+     Running setup.py develop for ckan
+       /usr/lib/python2.7/distutils/dist.py:267: UserWarning: Unknown distribution option: 'message_extractors'
+         warnings.warn(msg)
+
+       warning: no files found matching '*' under directory 'ckanext/*/i18n'
+       no previously-included directories found matching '.git'
+       warning: no files found matching 'CHANGELOG.txt'
+       Creating /usr/lib/ckan/default/lib/python2.7/site-packages/ckan.egg-link (link to .)
+       Adding ckan 2.2.1 to easy-install.pth file
+       Installing ckan-admin script to /usr/lib/ckan/default/bin
+
+       Installed /usr/lib/ckan/default/src/ckan
+   Successfully installed ckan
+   Cleaning up...
+
+   Next to the CKAN package itself, we install the depencies needed by it:
+
+   pip install -r /usr/lib/ckan/default/src/ckan/requirements.txt
+
+   ...
+
+       warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+       warning: no previously-included files matching '*.hgignore' found anywhere in distribution
+       warning: no previously-included files matching '*.hgtags' found anywhere in distribution
+   Downloading/unpacking SQLAlchemy==0.7.8 (from -r /usr/lib/ckan/default/src/ckan/requirements.txt (line 16))
+     Downloading SQLAlchemy-0.7.8.tar.gz (2.6Mb): 2.6Mb downloaded
+     Running setup.py egg_info for package SQLAlchemy
+
+       warning: no files found matching '*.jpg' under directory 'doc'
+       no previously-included directories found matching 'doc/build/output'
+   Downloading/unpacking Tempita==0.5.1 (from -r /usr/lib/ckan/default/src/ckan/requirements.txt (line 17))
+
+   ...
+
+   Cleaning up...
+
+
+   After this, deactivate the virtual environent
+
+   deactivate
+
+   And reactivate it again:
+
+   . /usr/lib/ckan/default/bin/activate
+
+   This concludes the installation from source.
+
+
+d. Check the web server configuration consistency
+
+   Since the CKAN installation affects the NginX and Apache server configuration, now is a good time to check if these configurations are still consistent, in other words: work for all the existing applications accessible through them.
+
+
+e. PostgreSQL configuration
+
+   Now, we can proceed with the configuration of the database CKAN needs. We start by creating a a database user for CKAN:
+
+   sudo -u postgres createuser -S -D -R -P ckan_default
+
+   PostgreSQL will ask for a password for the user; remember it.
+
+   Create a new database for CKAN
+
+   sudo -u postgres createdb -O ckan_default ckan_default -E utf-8
+
+   Initialise the CKAN database:
+
+   sudo ckan db init
+   Initialising DB: SUCCESS
+
+   Listing the databases again will now show the database added:
+
+   sudo -u postgres psql -l
+                                        List of databases
+        Name     |    Owner     | Encoding |   Collate   |    Ctype    |   Access privileges
+   --------------+--------------+----------+-------------+-------------+-----------------------
+    ckan_default | ckan_default | UTF8     | en_GB.UTF-8 | en_GB.UTF-8 |
+    mint2        | mint2        | UTF8     | C           | C           |
+    postgres     | postgres     | UTF8     | en_GB.UTF-8 | en_GB.UTF-8 |
+    template0    | postgres     | UTF8     | en_GB.UTF-8 | en_GB.UTF-8 | =c/postgres          +
+                 |              |          |             |             | postgres=CTc/postgres
+    template1    | postgres     | UTF8     | en_GB.UTF-8 | en_GB.UTF-8 | =c/postgres          +
+                 |              |          |             |             | postgres=CTc/postgres
+   (5 rows)
+
+   Please note, that in the example below, there were already added some databases prior to the PostgreSQL configuration.
+
+
+f. Solr configuration
+
+   The Solr instance needs to use the CKAN schema instead of the schema used in the example. We move the schema in the example aside:
+
+   cd /opt/solr/collection1/conf
+   sudo mv schema.xml schema.xml.install
+
+   Next, create a reference in the Solr directory pointing to the Solr schema in the CKAN installation:
+
+   sudo ln -s /usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml schema.xml
+
+   Note: this is the only relation between Solr and CKAN.
+
+
+g. CKAN API installation (for uploading)
+
+   Now we turn to the CKAN API presented on GitHub. Please note that CKAN comes with its own API, an API at the level of the web application. The API we are referring to now is the one available from GitHub, the API that implements bulk operations:
+
+   https://github.com/ckan/ckanapi
+
+   It requires:
+
+   setuptools
+   docopt
+   requests
+   simplejson
+
+   These packages are installed with ckanapi itself.
+
+   We will install ckanapi in the virtual environment CKAN itself was installed in. If, after installing the CKAN package, the virtual environment in which the package was installed is still active, you can skip the second of the next two steps:
+
+   cd /usr/lib/ckan
+   . default/bin/activate
+
+   Now, install the ckanapi package:
+
+   pip install -e 'git+https://github.com/ckan/ckanapi.git#egg=ckanapi'
+   Obtaining ckanapi from git+https://github.com/ckan/ckanapi.git#egg=ckanapi
+     Cloning https://github.com/ckan/ckanapi.git to ./default/src/ckanapi
+     Running setup.py egg_info for package ckanapi
+
+       package init file 'ckanapi/tests/mock/__init__.py' not found (or not a regular file)
+   Requirement already satisfied (use --upgrade to upgrade): distribute in ./default/lib/python2.7/site-packages/distribute-0.6.24-py2.7.egg (from ckanapi)
+
+   Downloading/unpacking docopt (from ckanapi)
+     Downloading docopt-0.6.2.tar.gz
+     Running setup.py egg_info for package docopt
+
+   Requirement already satisfied (use --upgrade to upgrade): requests in ./default/lib/python2.7/site-packages (from ckanapi)
+   Requirement already satisfied (use --upgrade to upgrade): simplejson in ./default/lib/python2.7/site-packages (from ckanapi)4//p_offset/104/p_total/121
+   Installing collected packages: ckanapi, docopt
+     Running setup.py develop for ckanapi
+
+       package init file 'ckanapi/tests/mock/__init__.py' not found (or not a regular file)
+       Creating /usr/lib/ckan/default/lib/python2.7/site-packages/ckanapi.egg-link (link to .)
+       Adding ckanapi 3.4-dev to easy-install.pth file
+       Installing ckanapi script to /usr/lib/ckan/default/bin
+
+       Installed /usr/lib/ckan/default/src/ckanapi
+     Running setup.py install for docopt
+
+   Successfully installed ckanapi docopt
+   Cleaning up...
+
+   Note: it is important to use the pip instance outside of the environment. This way, a lot of dependencies can be relied upon without having to install these in the environment. Because of this, a particular system may list different results than the ones pip lists above.
+
+   This concludes the installation of the ckanapi package.
+
+
+h. Installing the DASISH extension
+
+   Next, we install the DASISH extension. Assuming, the virtual environment in which CKAN and the ckanapi package were installed is still active, in this environment do:
+
+   git clone https://github.com/DASISH/ckanext-dasish.git
+
+   sudo python setup.py develop
+
+   running develop
+   Checking .pth file support in /usr/local/lib/python2.7/dist-packages/
+   /usr/bin/python -E -c pass
+   TEST PASSED: /usr/local/lib/python2.7/dist-packages/ appears to support .pth files
+   running egg_info
+   creating ckanext_dasish.egg-info
+   writing ckanext_dasish.egg-info/PKG-INFO
+   writing namespace_packages to ckanext_dasish.egg-info/namespace_packages.txt
+   writing top-level names to ckanext_dasish.egg-info/top_level.txt
+   writing dependency_links to ckanext_dasish.egg-info/dependency_links.txt
+   writing entry points to ckanext_dasish.egg-info/entry_points.txt
+   writing manifest file 'ckanext_dasish.egg-info/SOURCES.txt'
+   reading manifest file 'ckanext_dasish.egg-info/SOURCES.txt'
+   writing manifest file 'ckanext_dasish.egg-info/SOURCES.txt'
+   running build_ext
+   Creating /usr/local/lib/python2.7/dist-packages/ckanext-dasish.egg-link (link to .)
+   Adding ckanext-dasish 0.1 to easy-install.pth file
+   Installed /home/work/apps/ckanext-dasish
+   Processing dependencies for ckanext-dasish==0.1
+   Finished processing dependencies for ckanext-dasish==0.1
+
+   Now, the installation of the DASISH JMD has been completed. As a next step, we will configure it.
+
+
+i. CKAN configuration
+
+   First, we create the CKAN configuration file. This file defines the the parameters in the CKAN package. Note, here 'keeloo' is a user that is allowed to modify the CKAN configuration.
+
+   sudo mkdir -p /etc/ckan/default
+   sudo chown -R keeloo /etc/ckan/
+
+   cd /usr/lib/ckan/default/src/ckan
+   paster make-config ckan /etc/ckan/default/production.ini
+
+   Distribution already installed:
+     ckan 2.2.1 from /usr/lib/ckan/default/src/ckan
+   Creating /etc/ckan/default/production.ini
+   Now you should edit the config files
+     /etc/ckan/default/production.ini
+
+   Indeed, we need to edit the configuration file.
+
+   - The port at which ckan can be reached. This depends on the Apache2 configuration: the port number should be the same as in the /etc/apache2/sites-available/ckan_default file. If, for example, ... then, after adding
+
+     ...
+
+     CKAN will be available at
+
+     http://127.0.0.1:9080/
+
+
+   - The PostgreSQL user in
+
+     sqlalchemy.url = postgresql://ckan_default:ckan_pass@localhost/ckan_default
+
+     needs to be the user that was added when creating the database.
+
+   - The URL where Solr can be reached. This URL needs to correspond to the URL used to configure Solr:
+
+     solr_url = http://127.0.0.1:8081/solr
+
+   - Various parameters that deviate from the default
+
+     ckan.activity_streams_enabled = true
+
+     (Secrets and uuid's are different, but that is not a problem when working locally, and that is what we assume to be the case.)
+
+     - Some parameters that need to be added to the configuration
+
+     ckan.auth.create_user_via_web = true
+     ckan.auth.roles_that_cascade_to_sub_groups = admin
+     ckan.search.automatic_indexing = false
+     ckan.search.solr_commit = false
+
+   - The DASISH plugin we previously installed, needs to be added to the configuration file as well. Therefore, the plugin definition might look something like this:
+
+     ckan.plugins = dasish stats text_preview recline_preview
+
+   - Apart from the DASISH extension, the site also needs to be customised by adding some logos:
+
+     ckan.site_logo = /base/images/dasish-logo.png
+     ckan.favicon = /images/icons/dasish.ico
+
+     Note: the images have been installed as part of the DASISH extension installed earlier.
+
+   Next to the production.ini file, there are two other files in the directory:
+
+   /etc/ckan/default/apache.wsgi
+   /etc/ckan/default/who.ini
+
+   The apache file establishes the connection between the web server and the Python enviroment CKAN was installed into. The who.ini file is the configuration file to the repoze.who framework for WSGI applications. The who.ini file needs to be linked:
+
+   cd /usr/lib/ckan/default/src/ckan
+   ln -s /etc/ckan/default/who.ini
+
+
+   Second, after editing the CKAN configuration, we need to add DASISH specific elements in the form of an administrative user, and the groups represented in DASISH.
+
+   Make sure paster is installed. Do
+
+   . /usr/lib/ckan/default/bin/activate
+   cd /usr/lib/ckan/default/src/ckan
+
+   paster sysadmin add keeloo -c /etc/ckan/default/production.ini
+   User "newadmin" not found
+   Create new user: newadmin? [y/n]y
+   Password:
+   Confirm password:
+   Creating newadmin user
+   Added newadmin as sysadmin
+
+   After an administrative user has been added, groups can be added. For each group, CESSDA, CLARIN and DARIAH, a description can be found in the
+
+   md-scripts/data/
+
+   directory. This directory also contains their respective logos. The logos need to be available from a web server. There is also an 'about' text available for the site. This text can be added by going to the sysadmin settings. Please use 'DASISH' as the site title. Again, like in the case of the groups, the text for the 'about' text is available in the
+
+   md-scripts/data/
+
+   directory. Please note that the DASISH logo itself comes with the ckan extension. It is referred to as the site tag logo. The same holds for the welcome text. Please note the the intro text defaults to 'Welcome to' + the site title
+
+   After adding the groups you can use the ckanapi to list them. Still in the virtual environment do:
+
+   ckanapi action group_list -r http://127.0.0.1:9080/
+   [
+     "cessda",
+     "clarin",
+     "dariah"
+   ]
