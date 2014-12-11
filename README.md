@@ -3,7 +3,7 @@ jmd-scripts
 
 This repository contains scripts and documentation relevant to the workflow of the Joint Metadata Domain (task 5.4). If you would like to replicate the web portal, please refer to the installation instruction in the doc directory.
 
-The JMD's workflow comprises three stages, as illustrated below:
+The JMD's workflow roughly comprises four stages, as illustrated below:
 
 ![workflow illustration](https://raw.githubusercontent.com/DASISH/jmd-scripts/master/workflow.png "JMD Workflow")
 
