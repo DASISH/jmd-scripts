@@ -10,8 +10,8 @@ The JMD's workflow comprises three stages, as illustrated below:
 1. Fetching of original metadata records using the **OAI-PMH protocol**.
 2. Performing **semantic mapping** into the JMD's internal
 representation. In case metadata takes the form of CMDI, the definitions used are expanded and corresponding mapping tables will be generated. If not, the semantic mapper use static mapping tables.
-3. Normalisation. This is the process of ** conforming values to a standard representation **. For example, fields representing a date are checked and converted to a specific format.
-4. Uploading. Once the records are normalised, they are uploaded to the ** CKAN database **
+3. Normalisation. This is the process of **conforming values to a standard representation**. For example, fields representing a date are checked and converted to a specific format.
+4. Uploading. Once the records are normalised, they are uploaded to the **CKAN database**
 
 Between stages, the metadata is stored on the file system to minimise
 interdependency between the stages.
