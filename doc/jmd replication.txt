@@ -1,9 +1,11 @@
-Instruction for installation of the JMD
+
+
+Instruction for the replication of the DASISH Joint Metadata Domain
 
 
 1. Introduction
 
-   The DASISH joint metadata domain is a website presenting metadata provided by members from the CESSDA, CLARIN and DARIAH organisations. The website is based on CKAN. The following describes the steps needed to go through when building the site.
+   The DASISH joint metadata domain is a website presenting metadata provided by members from the CESSDA, CLARIN and DARIAH organisations. The website is based on CKAN. The following describes the steps needed to go through when building the site on a Linux system.
 
 
 2. Components
@@ -91,7 +93,7 @@ i. DASISH packages from Github
 
    Note: while the mapping definitions are specific to the DASISH JMD site, the mapper itself is not.
 
-   Third, we need the Bash scripts that constitute the work flow from harvesting, via mapping and normalising to importing into the site's database. These scripts are specific to the site:
+   Third, we need the Bash scripts that constitute the workflow from harvesting, via mapping and normalising to importing into the site's database. These scripts are specific to the site:
 
    https://github.com/DASISH/jmd-scripts
 
@@ -209,7 +211,7 @@ directory.
 
    <lib dir="../contrib/velocity/lib" regex=".*\.jar" />
    <lib dir="../dist/" regex="solr-velocity-\d.*\.jar" />
-   This step is important, since later on, we will adapt the solr installation to suit ckan.
+   This step is important, since later on, we will adapt the solr installation to suit CKAN.
 
    Change the ownership of the files in /opt/solr to the jetty user.
 
@@ -262,7 +264,7 @@ a. CKAN and Apache
 
    sites-enabled
 
-   directory reflects what is needed by ckan and the rest of the system.
+   directory reflects what is needed by CKAN and the rest of the system.
 
 
 b. CKAN and Nginx
@@ -605,7 +607,7 @@ i. CKAN configuration
 
    md-scripts/data/
 
-   directory. Please note that the DASISH logo itself comes with the ckan extension. It is referred to as the site tag logo. The same holds for the welcome text. Please note the the intro text defaults to 'Welcome to' + the site title
+   directory. Please note that the DASISH logo itself comes with the CKAN extension. It is referred to as the site tag logo. The same holds for the welcome text. Please note the the intro text defaults to 'Welcome to' + the site title
 
    After adding the groups you can use the ckanapi to list them. Still in the virtual environment do:
 
@@ -615,3 +617,408 @@ i. CKAN configuration
      "clarin",
      "dariah"
    ]
+
+
+6. Creating the workflow
+
+   The final step completing the replication of the DASISH JMD portal is the installation of the workflow scripts. Basically, these scripts transport the metadata from the various endpoints in the DASISH community to the database used by the portal. The scripts repository also holds texts and logos visible in the portal and this file, the replication documentation.
+
+   Please note that due to differences in the environment and package versions, output used to illustrate the installations might differ from the output you see when installing.
+
+
+a. installing the scripts
+
+   With CKAN and the components it depends on in place, clone the scripts in any directory you desire.
+
+   cd /home/user/package/jmd-scripts
+
+   git clone https://github.com/DASISH/jmd-scripts
+   Cloning into 'jmd-scripts'...
+   remote: Counting objects: 313, done.
+   remote: Compressing objects: 100% (12/12), done.
+   remote: Total 313 (delta 4), reused 0 (delta 0)
+   Receiving objects: 100% (313/313), 3.98 MiB | 1.45 MiB/s, done.
+   Resolving deltas: 100% (184/184), done.
+
+   Whenever an upgrade is available, you can use the git pull command. Apart from the scripts themselves, the repository also contains documentation and configuration files. The
+
+   conf
+
+   directory holds example files for CKAN, a dictionary for the harmoniser, all the necessary information for the harvester to access the endpoints in the DASISH community, example PostgreSQL configuration, and finally the configuration files for Solr.
+
+   Currently, we have configured the portal with the default Solr schema as is provided with CKAN. For the DASISH portal, we need a schema defining the fields that are specific to it.
+
+   cd /opt/solr/collection1/conf/
+
+   Stop Jetty and remove the link to the CKAN provided schema. After that:
+
+   cp /home/user/packages/jmd-scripts/conf/solr/schema.xml .
+
+   and start Jetty.
+
+   The scripts themselves do not have to be modified, except the
+
+   /home/user/packages/jmd-scripts/scripts/set-jmd-context.sh
+
+   file. This script contains all path and file name related definitions. Have a look at this file. Cloned from the repository it contains example values for the names. The annotations in the file explain the role of each definition. Basically, you need to define the directories where the
+
+   scripts themselves,
+   log files,
+   temporary files,
+   and configuration files
+
+   are. Next to this, there are groups of definitions that pertain to
+
+   the harvest manager,
+   the mapper,
+   and CKAN.
+
+   Finally, there is the scripts directory. It contains the scripts representing steps in the workflow. Each script has a numeric prefix designating the position in the sequence. Scripts carrying the same prefix can be run in parallel. Please note that the overall script invoking the other ones currently invokes steps that could in principle be carried out in parallel, in a sequential fashion.
+
+   With the endpoints currently included, beware that the sequence can take up quite some time. In an average environment think of days rather than hours. While there is the overall script, it is questionable if it is necessary or desirable to use it. There are several reasons for this.
+
+   1. It might not be necessary to re-harvest an endpoint frequently. This depends on the nature of the endpoint. Also, instead of using the harvest manager, it would be possible to manually incrementally harvest using the designated OAI verbs for this.
+
+   2. It might be a good idea to go step by step. Inspect the results of a step before carrying out the next one.
+
+   3. Create backups of intermediate data. If something goes wrong while mapping for example, no re-harvesting would be necessary.
+
+   The context script refers to the harvesting manager, the semantic mapper and the harmoniser. Of these components, the harmoniser is already installed with the scripts. We need to install and configure the harvest manager and the mapper however.
+
+
+b. Harvest manager installation
+
+   You can install the OAI harvest manager by cloning it:
+
+   cd /home/user/package
+
+   git clone https://github.com/TheLanguageArchive/oai-harvest-manager
+   Cloning into 'oai-harvest-manager'...
+   remote: Counting objects: 457, done.
+   remote: Total 457 (delta 0), reused 0 (delta 0)
+   Receiving objects: 100% (457/457), 156.21 KiB | 274 KiB/s, done.
+   Resolving deltas: 100% (184/184), done.
+
+   Next, follow the instructions provided by the github repository. Before installing it, you first need to build the package.
+
+   cd /home/user/oai-harvest-manager/
+   mvn clean package assembly:assembly
+
+   ...
+
+   [INFO] Building tar: /home/user/package/oai-harvest-manager/target/oai-harvest-manager-0.3.e20eda.tar.gz
+   [INFO] ------------------------------------------------------------------------
+   [INFO] BUILD SUCCESSFUL
+   [INFO] ------------------------------------------------------------------------
+   [INFO] Total time: 5 seconds
+   [INFO] Finished at: Tue Nov 04 17:16:04 CET 2014
+   [INFO] Final Memory: 52M/684M
+   [INFO] --------------------------------------------
+
+   will create the harvester package in the
+
+   /home/user/oai-harvest-manager/target
+
+   directory.
+
+   Next, we install the package, for example in the
+
+   /home/user/apps/harvester
+
+   directory.
+
+   mkdir /home/user/apps
+   mkdir /home/user/apps/harvester
+
+   copy package
+
+   cp -p /home/user/package/oai-harvest-manager/target/oai-harvest-manager-0.3.e20eda.tar.gz .
+
+   cd /home/user/apps/harvester
+   tar -xvf oai-harvest-manager-0.3.e20eda.tar.gz
+   resources/config-clarin-meertens.xml
+   resources/sil_to_iso6393.xml
+   resources/config-others.xml
+   resources/olac2cmdi.xsl
+   resources/config-test.xml
+   resources/config-clarin.xml
+   run-harvester.sh
+   oai-harvest-manager-0.3.e20eda.jar
+   log4j.properties
+   ...
+
+   Please note that in your case the complex name (subject to changing version number of course) of the package will probably be different.
+
+   Since the workflow scripts take care of providing the harvest manager with the intended endpoint information, no additional configuration is needed.
+
+   The harvest manager will create a directory tree in which it will store the harvested files. The root of this tree is defined by the
+
+   JMDDataDir
+
+   variable in the
+
+   set-jmd-context.sh
+
+   script. Currently, the tree looks like this:
+
+   01-harvested
+     cessda
+       results
+          cmdi
+            DANS_CMDI_Provider
+              0001
+              ...
+          datacite
+            GESIS_via_DataCite
+              0001
+              ...
+            SND_via_DataCite
+              0001
+              ...
+            UKDA_via_DataCite
+              0001
+              ...
+          dc
+            DANS_Easy_Archive
+
+          ddi-1.2.2
+            LiDA
+              0001
+              ...
+          ddi-2.5
+            UK_Data_Archive_OAI_Repository
+              0001
+              ...
+          ddi-3.1
+            the_Swedish_Language_Banks_resources
+              0001
+              ...
+     clarin
+       results
+          cmdi
+            CLARIN_Centre_Vienna_Language_Resources_Portal
+              0001
+              ...
+            CLARIN_DK_UCPH_Repository
+              0001
+              ...
+            The_Language_Archive_s_IMDI_portal
+              0001
+              ...
+     dariah
+       results
+         cmdi
+         dc
+           ACDH_Repository
+              0001
+              ...
+           ADS_Archive_Catalogue
+              0001
+              ...
+           Berlin_Brandenburgische_Akademie_der_Wissenschaften_edoc
+              0001
+              ...
+           Calames_OAI_Serveur_ABES_
+              0001
+              ...
+           DARIAH_Collection_Registry
+              0001
+              ...
+           Demo_instance_for_the_imeji_community
+              0001
+              ...
+           ISN_ZRC_SAZU
+              0001
+              ...
+           Konrad_Zuse_Internet_Archive
+              0001
+              ...
+           Max_Planck_Society_Publication_Repository
+              0001
+              ...
+           Sistory_si_OAI_Repository
+              0001
+              ...
+           Speech_and_Language_Data_Repository_SLDR_ORTOLANG_
+              0001
+              ...
+           STAR_depot_national_des_theses_electroniques_francaises
+              0001
+              ...
+           University_of_Vienna_Phaidra
+              0001
+              ...
+         ddi-1.2.2
+         ddi-2.5
+         ddi-3.1
+         ese
+           GAMS_Asset_Management_System_for_the_Humanities
+
+
+   In other words: for each group in CKAN, it will create a results directory, and at that level, it will create a directory for each metadata type harvested. In these directories the endpoints are represented. Finally, the metadata records are grouped in order to not let the directories in which they are stored grow too large.
+
+   Based on this tree, in each step a new tree will be created, or the current tree will be repopulated with modified records. So the
+
+   02-mapped
+   03-harmonized
+
+   trees will have similar structures. Please note that while the root of the tree can defined to be in any directory, the scripts rely on the integrity of the tree from the root. In between the steps, this structure should not be changed.
+
+   To give an idea of what you can expect when running the harvesting steps with the endpoints as listed in the scripts package, these statistics where compiled early November 2014:
+
+
+   DARIAH harvest
+
+     Number of endpoints: 18
+     Number of endpoints that cannot be not completed: 3, arachne, openedition, and etnoinfolab
+     Others can be completed, but might contain errors
+
+     Harvested files from:
+     14 Dublin Core endpoints
+     1  Europeana ESE endpoint
+
+     No files harvested from
+     - arachne
+       Found suitable prefix: oai_dc, but after that nothing, processing not completed
+     - openedition
+       No matching prefixes, invalid http response, processing not completed
+     - arzenal
+       Prefix oai_dc found, but no records, processing completed
+
+     Number of records per provider
+     GAMS                          12268
+     ACDH                             70
+     ADS                             431
+     BBAW                           2321
+     Calames                      186197
+     DARIAH Collection                92
+     Imeji                           100
+     ISN ZRC                         265
+     Konrad Zuse                     100
+     Max Planck Publication repo    4993
+     Sistory                       28612
+     SLDR ORTOLANG                   239
+     STAR                          32091
+     Vienna Phaidra                34460
+
+     total:                       302239
+
+
+   CESSDA harvest
+
+     Number of endpoints: 11
+     Number of endpoints that cannot be not completed: 0
+
+     Harvested files from:
+     1  CMDI endpoint
+     3  DataCite endpoints
+     3  DDI endpoints
+     1  Dublin Core endpoint
+
+     No files harvested from
+     - ddaonline
+     - nesstar.snd
+     - nesstar.ucd
+
+     Number of records per provider
+     DANS  CMDI                     1000
+     GESIS via DataCite             6225
+     SND   via DataCite             2245
+     UK Data Archive via DataCite   6073
+     DANS                          28404
+     LiDA                            546
+     UK Date Archive                6286
+     Swedish Language Bank           115
+
+     total:                        50894
+
+
+   CLARIN harvest
+
+     Number of endpoints:  3
+     Number of endpoints that cannot be not completed: 0
+
+     Harvested files from:
+     3  CMDI endpoints
+
+
+     Number of records per provider
+     Vienna Language resources           7
+     UCPH                            14324
+     Language Archives              145245
+
+     total:                         159576
+
+
+   The current harvester configuration can of course be extended by adding entries to the
+
+   /home/user/packages/jmd-scripts/conf/harvester/
+
+   directory. Now we turn to the installation of the semantic mapper.
+
+
+c. Semantic mapper installation
+
+   Like the harvest manager, the semantic mapper can be installed by cloning and building. The semantic mapper however consists of two parts: the mapper software itself, and in a separate repository, the mapping definitions used by it. It is possible to install from these repositories separately. Alternatively, the semantic mapper scripts provides for automatic installation and upgrading of the mapper and mappings. This is the route we will follow.
+
+   Since, different from the process involving the harvest manager, building and installation more or less coincide, create and go to the intended installation directory right away:
+
+   cd /home/user/apps
+
+   git clone http://github.com/TheLanguageArchive/md-mapper.git
+   Cloning into 'md-mapper'...
+   remote: Counting objects: 182, done.
+   remote: Total 182 (delta 0), reused 0 (delta 0)
+   Receiving objects: 100% (182/182), 52.46 KiB, done.
+   Resolving deltas: 100% (73/73), done.
+
+   git clone https://github.com/DASISH/md-mapping.git
+   Cloning into 'md-mapping'...
+   remote: Counting objects: 398, done.
+   remote: Compressing objects: 100% (14/14), done.
+   remote: Total 398 (delta 6), reused 0 (delta 0)
+   Receiving objects: 100% (398/398), 328.11 KiB | 285 KiB/s, done.
+   Resolving deltas: 100% (259/259), done.
+
+   Next, invoke the update and deploy script. It will check for updates, both for the semantic mapper and the mappings. Initially, and if a new version of mapper is found, it will build and install the package.
+
+   cd md-mapper/
+
+   ./update-deploy.pl -f
+   Rebuilding needed; running Maven.
+   [INFO] Scanning for projects...
+   ...
+   [INFO] Building tar: /home/user/package/md-mapper/target/md-mapper-0.1.a8ac39.tar.gz
+   [INFO] ------------------------------------------------------------------------
+   [INFO] BUILD SUCCESSFUL
+   [INFO] ------------------------------------------------------------------------
+   [INFO] Total time: 4 seconds
+   [INFO] Finished at: Wed Nov 05 13:30:52 CET 2014
+   [INFO] Final Memory: 45M/684M
+   [INFO] ------------------------------------------------------------------------
+   New version a8ac39409f7b5540ccc744b0c094437159c84497 deployed successfully; see ../mapper/current.
+
+   In the directory pointed out by the script, you will find a structure similar to  that when installing the mapper package on its own. However, the
+
+   mapper/current
+
+   directory includes a link to the mapfiles in
+
+   md-mapping/mapfiles/
+
+   The advantage of installing the mapper and mappings in this way is that the
+
+   /home/user/jmd-scriptsworkflow-scripts/02-updatemapper.sh
+
+   script can be applied to automatically update the mapper and mappings. It will do this by checking the repositories, and if necessary, pull in data and rebuild the mapper. This concludes the installation of the mapper and mappings.
+
+   Please note that because of its more static nature, this mode of operation is not available for the harvest manager. Note also, that the mappings are not in the same repository as the mapper.
+
+
+d. Note about the upload bulk operation
+
+   It can be performed over http, but also on the same server. If you want to do it in the latter way do:
+
+   ckanapi load datasets -I datasets.jsonl.gz -z -p 3 -c /etc/ckan/production.init
+
+   Currently, the upload script does not use HTTP. Uploading over HTTP requires the server URL, and also the apiKey to be consistently defined. This key will be generated whenever a CKAN administrative user is created. So for uploading to work, create a ckan user first.

@@ -27,7 +27,7 @@ JMDConfDir=/home/work/jmd/conf
 export JMDConfDir
 
 
-# --- harvester related definitions
+# --- harvest manager related definitions
 
 # directory in which harvester messages are to be logged
 #HLOGDIR=$JDMLogDir
