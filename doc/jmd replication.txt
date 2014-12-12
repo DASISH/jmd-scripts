@@ -10,7 +10,7 @@ Instruction for the replication of the DASISH Joint Metadata Domain
 
 2. Components
 
-The CKAN package depends on several packages. Here we assume an installation on a Linux server. The choice of Linux distribution is free, as long as it can support the package referred to here:
+   The CKAN package depends on several packages. Here we assume an installation on a Linux server. The choice of Linux distribution is free, as long as it can support the package referred to here:
 
 
 a. Java development kit
@@ -109,45 +109,45 @@ We assume some packages to be existing in some arbitrary way, some will be descr
 
 3. Jetty installation
 
-When installing Jetty, make sure
+   When installing Jetty, make sure
 
-/etc/default/jetty
+   /etc/default/jetty
 
-with something like
+   with something like
 
-JETTY_HOME=/opt/jetty/ # Point to Jetty home
-JAVA_HOME=/opt/jdk1.7.0_45/ # Path to Java
-NO_START=0 # Start on boot
-JETTY_HOST=0.0.0.0 # Listen to all hosts
-JETTY_USER=jetty # Run as this user
+   JETTY_HOME=/opt/jetty/ # Point to Jetty home
+   JAVA_HOME=/opt/jdk1.7.0_45/ # Path to Java
+   NO_START=0 # Start on boot
+   JETTY_HOST=0.0.0.0 # Listen to all hosts
+   JETTY_USER=jetty # Run as this user
 
-exists. Jetty uses port 8080 by default. If another application is already using this port, please change the value of the
+   exists. Jetty uses port 8080 by default. If another application is already using  this port, please change the value of the
 
-jetty.port
+   jetty.port
 
-parameter in
+   parameter in
 
-/opt/jetty/start.ini
+   /opt/jetty/start.ini
 
-to something else, for example: 8081
+   to something else, for example: 8081
 
-You can now try out Jetty by pointing the browser to
+   You can now try out Jetty by pointing the browser to
 
-http://localhost:8081/
+   http://localhost:8081/
 
-It will respond with something like
+   It will respond with something like
 
-Error 404 - Not Found.
-No context on this server matched or handled this request.
-Contexts known to this server are:
+   Error 404 - Not Found.
+   No context on this server matched or handled this request.
+   Contexts known to this server are:
 
-Powered by Jetty:// Java Web Server
+   Powered by Jetty:// Java Web Server
 
-which is not a 'real error'; it only means that no web applications have been added yet. We will return to jetty later, that is, we will install solr into the jetty
+   which is not a 'real error'; it only means that no web applications have been added yet. We will return to jetty later, that is, we will install solr into the jetty
 
-webapps
+   webapps
 
-directory.
+   directory.
 
 
 4. Solr installation
@@ -1015,10 +1015,10 @@ c. Semantic mapper installation
    Please note that because of its more static nature, this mode of operation is not available for the harvest manager. Note also, that the mappings are not in the same repository as the mapper.
 
 
-d. Note about the upload bulk operation
+d. Uploading to the CKAN database
 
-   It can be performed over http, but also on the same server. If you want to do it in the latter way do:
+   The
 
-   ckanapi load datasets -I datasets.jsonl.gz -z -p 3 -c /etc/ckan/production.init
+   07-upload-jsonl.sh
 
-   Currently, the upload script does not use HTTP. Uploading over HTTP requires the server URL, and also the apiKey to be consistently defined. This key will be generated whenever a CKAN administrative user is created. So for uploading to work, create a ckan user first.
+   script provides two ways of uploading the JSON lines file to the CKAN database: via the local filesystem, or via HTTP. Uploading over HTTP requires the server URL, and also the apiKey to be consistently defined. This key will have been generated when the CKAN administrative user was created. If the key and the URL are not defined in the context script, the upload script will perform a local upload.
