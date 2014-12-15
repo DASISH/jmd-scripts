@@ -106,8 +106,6 @@
       <set>BL.UKDA</set>
     </provider>
 
-    <provider url="http://easy.dans.knaw.nl/oai/"/>
-
     <!-- DANS with CMDI support -->
     <provider url="http://oai.clarin-beta.dans.knaw.nl/OAIHandler"/>
 
