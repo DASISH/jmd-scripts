@@ -26,11 +26,10 @@ that are stored in their own repositories
 OAI-PMH harvesting is a well defined process, so this part is
 straightforward. We use our [OAI Harvest
 Manager](https://github.com/TheLanguageArchive/oai-harvest-manager)
-for it. See the [configuration file](harvester-config.xml) for
-details. One thing of note is that formats to be harvested are mostly
-defined based on the metadata schema (in which case, the harvester
-performs a `ListMetadataFormats` query and harvests using all metadata
-prefixes that fit the specified schema).
+for it. Please refer to the the configuration files for the [CESSDA](conf/harvester/harvester-config-cessda.xml), [CLARIN](conf/harvester/harvester-config-cessda.xml) and [DARIAH](conf/harvester/harvester-config-dariah.xml) communities for view on the endpoints that are harvested from. One thing of
+note is that formats to be harvested are mostly defined based on the metadata schema
+(in which case, the harvester performs a `ListMetadataFormats` query and harvests
+using all metadata prefixes that fit the specified schema).
 
 
 ## Mapping
