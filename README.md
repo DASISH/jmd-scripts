@@ -1,7 +1,10 @@
 jmd-scripts
 ===========
 
-This repository contains scripts and documentation relevant to the workflow of the Joint Metadata Domain (task 5.4). If you would like to replicate the web portal, please refer to the installation instruction in the doc directory.
+This repository contains scripts and documentation relevant to the workflow of the
+Joint Metadata Domain (task 5.4). If you would like to replicate the web portal,
+please refer to [this document](doc/jmd replication.txt). It describes the steps needed to install and configure the CKAN package and its dependencies. Also, it described the DASISH specific extensions.
+
 
 The JMD's workflow roughly comprises four stages, as illustrated below:
 
@@ -18,7 +21,9 @@ interdependency between the stages.
 
 The main tasks are triggered by simple workflow scripts, found in this
 repository, but the main body of work of the JMD is done in modules
-that are stored in their own repositories
+that are stored in their own repositories. [This document](doc/jmd replication.txt)
+provides some information on how to perform the steps necessary to operate the
+portal.
 
 
 ## Harvesting
